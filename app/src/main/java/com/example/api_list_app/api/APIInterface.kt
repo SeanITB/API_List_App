@@ -11,7 +11,10 @@ import retrofit2.http.Url
 interface APIInterface {
 
     @GET("lists/current/hardcover-fiction.json?api-key=FRCOKGStV1RVJeCSE8VOJVfQAjf7rw6l")
-    suspend fun getCharacters(): Response<Data>
+    suspend fun getCharacters(
+        @Query("key") apiKey:String,
+        @Query("q") location:String,
+    ): Response<Data>
 
     companion object {
         val BASE_URL = "https://api.nytimes.com/svc/books/v3/"
@@ -25,5 +28,14 @@ interface APIInterface {
             return retrofit.create(APIInterface::class.java)
         }
     }
+
+    /*
+    https://medium.com/@kathankraithatha/how-to-use-api-in-jetpack-compose-10d11b8f166f
+    @GET("current.json")
+    suspend fun getWeather(
+        @Query("key") apiKey:String,
+        @Query("q") location:String,
+        ):WeatherResponse
+     */
 
 }
