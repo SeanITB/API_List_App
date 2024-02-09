@@ -1,6 +1,5 @@
 package com.example.api_list_app.api
 
-import com.example.api_list_app.model.Data
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -8,16 +7,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
 
+
 interface APIInterface {
 
-    @GET("lists/current/hardcover-fiction.json?api-key=FRCOKGStV1RVJeCSE8VOJVfQAjf7rw6l")
-    suspend fun getCharacters(
-        //@Query("key") apiKey:String,
-        //@Query("q") location:String,
-    ): Response<Data>
+    @GET("books/v3/lists/current/hardcover-fiction.json?api-key=FRCOKGStV1RVJeCSE8VOJVfQAjf7rw6l")
+    suspend fun getCharacters(): Response<Results>
 
     companion object {
-        val BASE_URL = "https://api.nytimes.com/svc/books/v3/"
+        val BASE_URL = "https://api.nytimes.com/svc/"
         fun create(): APIInterface {
             val client = OkHttpClient.Builder().build()
             val retrofit = Retrofit.Builder()

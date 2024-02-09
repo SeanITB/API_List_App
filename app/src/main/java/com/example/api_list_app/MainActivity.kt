@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.api_list_app.model.Data
-import com.example.api_list_app.model.Results
 import com.example.api_list_app.ui.theme.API_List_AppTheme
 import com.example.api_list_app.viewModel.BocksViewModel
 
@@ -52,17 +51,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
+//Results("", "", "", "", "", 0, "", "", "", "")
 @Composable
 fun MyRecyclerBooksView(booksVM: BocksViewModel){
     val showLoding: Boolean by booksVM.loading.observeAsState(true)
-    val books: Data by booksVM.books.observeAsState(Data(
-        "",
-        "",
-        0,
-        Results(
-            "", listOf(), listOf(), "", "", "", "", 0, "", "", "", "")
-        ),
-        "")
+    val books: Data by booksVM.books.observeAsState(Data(0, "", 0, emptyList()))
     booksVM.getBooks()
     if (showLoding) {
         CircularProgressIndicator(
@@ -72,16 +66,18 @@ fun MyRecyclerBooksView(booksVM: BocksViewModel){
     }
     else {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            items(books.books) {
-                BookItem(book = it)
+            items(books.results) { book ->
+                BookItem(book)
             }
         }
     }
 }
 
+
+
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun BookItem(book: Book) {
+fun BookItem(book: Data) {
     Card(
         border = BorderStroke(2.dp, Color.LightGray),
         shape = RoundedCornerShape(8.dp),
@@ -92,14 +88,6 @@ fun BookItem(book: Book) {
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            /*
-            Image(
-                painter = painterResource(id = book.book_image),
-                contentDescription = book.title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.)
-
-             */
             GlideImage(
                 model = book.book_image,
                 contentDescription = book.title,

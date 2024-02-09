@@ -1,9 +1,8 @@
 package com.example.api_list_app.model
 
 data class Data(
-    val copyright: String,
-    val last_modified: String,
-    val num_results: Int,
-    val results: Results,
-    val status: String
+    val count: Int,
+    val next: String,
+    val previous: Any,
+    val results: List<Result>
 )
