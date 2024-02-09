@@ -6,14 +6,14 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Url
+
 
 interface APIInterface {
 
     @GET("lists/current/hardcover-fiction.json?api-key=FRCOKGStV1RVJeCSE8VOJVfQAjf7rw6l")
     suspend fun getCharacters(
-        @Query("key") apiKey:String,
-        @Query("q") location:String,
+        //@Query("key") apiKey:String,
+        //@Query("q") location:String,
     ): Response<Data>
 
     companion object {

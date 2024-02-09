@@ -61,7 +61,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     //LIVEDATA
     //implementation("androidx.compose.runtime:runtime-livedata:1.5.4") //el de los apuntes q dani no utiliza
-    implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.1")
     //RETROFIT
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")

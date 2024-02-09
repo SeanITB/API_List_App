@@ -1,6 +1,5 @@
 package com.example.api_list_app.model
 
-/*
 data class Results(
     val bestsellers_date: String,
     val books: List<Book>,
@@ -15,5 +14,3 @@ data class Results(
     val published_date_description: String,
     val updated: String
 )
-
- */
