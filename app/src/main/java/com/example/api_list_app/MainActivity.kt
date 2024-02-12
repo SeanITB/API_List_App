@@ -4,15 +4,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,9 +31,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.api_list_app.model.Book
 import com.example.api_list_app.model.Data
+import com.example.api_list_app.navigation.Routes
 import com.example.api_list_app.ui.theme.API_List_AppTheme
 import com.example.api_list_app.viewModel.BocksViewModel
 
@@ -37,6 +46,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val booksVM by viewModels<BocksViewModel>()
+        val TIME : Int = 1000
+
         setContent {
             API_List_AppTheme {
                 // A surface container using the 'background' color from the theme
@@ -44,7 +55,36 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MyRecyclerBooksView(booksVM)
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = Routes.LunchScreen.route,
+                        enterTransition = {
+                            fadeIn(animationSpec = tween(TIME)) + slideIntoContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left, tween(TIME)
+                            )
+                        },
+                        exitTransition = {
+                            fadeOut(animationSpec = tween(TIME)) + slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Down, tween(TIME)
+                            )
+                        },
+                        popEnterTransition = {
+                            fadeIn(animationSpec = tween(TIME)) + slideIntoContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Up, tween(TIME)
+                            )
+                        },
+                        popExitTransition = {
+                            fadeOut(animationSpec = tween(TIME)) + slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Right, tween(TIME)
+                            )
+                        }
+                    ) {
+                        composable(Routes.LunchScreen.route) { LunchScreen(navigationController, settingsVM) }
+                        composable(Routes.MenuScreen.route,) { MenuScreen(navigationController, settingsVM, gameVM, windowInfo)}
+                        composable(Routes.ListScreen.route) { GameScreen(navigationController, settingsVM, gameVM, windowInfo) }
+                        composable(Routes.DetailScreen.route) { ResultScreen(navigationController, settingsVM, gameVM, windowInfo) }
+                    }
                 }
             }
         }
@@ -52,11 +92,10 @@ class MainActivity : ComponentActivity() {
 }
 
 
-//Results("", "", "", "", "", 0, "", "", "", "")
 @Composable
 fun MyRecyclerBooksView(booksVM: BocksViewModel){
     val showLoding: Boolean by booksVM.loading.observeAsState(true)
-    val books: Data by booksVM.books.observeAsState(Data(0, "", 0, emptyList()))
+    val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
     booksVM.getBooks()
     if (showLoding) {
         CircularProgressIndicator(
@@ -66,10 +105,13 @@ fun MyRecyclerBooksView(booksVM: BocksViewModel){
     }
     else {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            items(books.results) { book ->
+            items(books.books) { book ->
                 BookItem(book)
             }
         }
+
+
+
     }
 }
 
@@ -77,24 +119,24 @@ fun MyRecyclerBooksView(booksVM: BocksViewModel){
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun BookItem(book: Data) {
+fun BookItem(book: Book) {
     Card(
         border = BorderStroke(2.dp, Color.LightGray),
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
             GlideImage(
-                model = book.book_image,
+                model = book.image,
                 contentDescription = book.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .height(book.book_image_height.dp)
-                    .width(book.book_image_width.dp)
+                    //.height(book.book_image_height.dp)
+                    //.width(book.book_image_width.dp)
             )
             Text(
                 text = book.title,
@@ -104,3 +146,7 @@ fun BookItem(book: Data) {
         }
     }
 }
+
+
+
+

@@ -1,5 +1,6 @@
 package com.example.api_list_app.api
 
+import com.example.api_list_app.model.Data
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -10,11 +11,11 @@ import retrofit2.http.GET
 
 interface APIInterface {
 
-    @GET("books/v3/lists/current/hardcover-fiction.json?api-key=FRCOKGStV1RVJeCSE8VOJVfQAjf7rw6l")
-    suspend fun getCharacters(): Response<Results>
+    @GET("history")
+    suspend fun getCharacters(): Response<Data>
 
     companion object {
-        val BASE_URL = "https://api.nytimes.com/svc/"
+        val BASE_URL = "https://www.dbooks.org/api/search/"
         fun create(): APIInterface {
             val client = OkHttpClient.Builder().build()
             val retrofit = Retrofit.Builder()
