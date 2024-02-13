@@ -9,6 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,6 +41,9 @@ import com.example.api_list_app.model.Book
 import com.example.api_list_app.model.Data
 import com.example.api_list_app.navigation.Routes
 import com.example.api_list_app.ui.theme.API_List_AppTheme
+import com.example.api_list_app.view.DetailScreen
+import com.example.api_list_app.view.LunchScreen
+import com.example.api_list_app.view.MyRecyclerBooksView
 import com.example.api_list_app.viewModel.BocksViewModel
 
 class MainActivity : ComponentActivity() {
@@ -58,7 +62,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Routes.LunchScreen.route,
+                        startDestination = Routes.ListScreen.route,
                         enterTransition = {
                             fadeIn(animationSpec = tween(TIME)) + slideIntoContainer(
                                 AnimatedContentTransitionScope.SlideDirection.Left, tween(TIME)
@@ -80,10 +84,10 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     ) {
-                        composable(Routes.LunchScreen.route) { LunchScreen(navigationController, settingsVM) }
-                        composable(Routes.MenuScreen.route,) { MenuScreen(navigationController, settingsVM, gameVM, windowInfo)}
-                        composable(Routes.ListScreen.route) { GameScreen(navigationController, settingsVM, gameVM, windowInfo) }
-                        composable(Routes.DetailScreen.route) { ResultScreen(navigationController, settingsVM, gameVM, windowInfo) }
+                        composable(Routes.LunchScreen.route) { LunchScreen(navController) }
+                        //composable(Routes.MenuScreen.route,) { MenuScreen(navController)}
+                        composable(Routes.ListScreen.route) { MyRecyclerBooksView(navController, booksVM) }
+                        composable(Routes.DetailScreen.route) { DetailScreen(navController, booksVM) }
                     }
                 }
             }
@@ -92,60 +96,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@Composable
-fun MyRecyclerBooksView(booksVM: BocksViewModel){
-    val showLoding: Boolean by booksVM.loading.observeAsState(true)
-    val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
-    booksVM.getBooks()
-    if (showLoding) {
-        CircularProgressIndicator(
-            modifier = Modifier.width(64.dp),
-            color = MaterialTheme.colorScheme.primary
-        )
-    }
-    else {
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            items(books.books) { book ->
-                BookItem(book)
-            }
-        }
 
-
-
-    }
-}
-
-
-
-@OptIn(ExperimentalGlideComposeApi::class)
-@Composable
-fun BookItem(book: Book) {
-    Card(
-        border = BorderStroke(2.dp, Color.LightGray),
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-        ) {
-            GlideImage(
-                model = book.image,
-                contentDescription = book.title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    //.height(book.book_image_height.dp)
-                    //.width(book.book_image_width.dp)
-            )
-            Text(
-                text = book.title,
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxSize())
-        }
-    }
-}
 
 
 

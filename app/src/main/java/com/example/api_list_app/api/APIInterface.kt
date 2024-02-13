@@ -6,16 +6,19 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-
+import retrofit2.http.Path
 
 
 interface APIInterface {
 
-    @GET("history")
-    suspend fun getCharacters(): Response<Data>
+    @GET("{query}")
+    suspend fun getGenderBook(@Path("query") charQuery: String): Response<Data>
+
+    @GET("{query}/{id}")
+    suspend fun getBook(@Path("query") charQuery: String, @Path("id") charId: String): Response<Data>
 
     companion object {
-        val BASE_URL = "https://www.dbooks.org/api/search/"
+        val BASE_URL = "https://www.dbooks.org/api/"
         fun create(): APIInterface {
             val client = OkHttpClient.Builder().build()
             val retrofit = Retrofit.Builder()
@@ -26,14 +29,4 @@ interface APIInterface {
             return retrofit.create(APIInterface::class.java)
         }
     }
-
-    /*
-    https://medium.com/@kathankraithatha/how-to-use-api-in-jetpack-compose-10d11b8f166f
-    @GET("current.json")
-    suspend fun getWeather(
-        @Query("key") apiKey:String,
-        @Query("q") location:String,
-        ):WeatherResponse
-     */
-
 }

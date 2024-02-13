@@ -1,9 +1,13 @@
 package com.example.api_list_app.viewModel
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.api_list_app.api.Repository
+import com.example.api_list_app.model.Book
 import com.example.api_list_app.model.Data
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,11 +21,26 @@ class BocksViewModel: ViewModel() {
     val loading = _loading
     private val _books = MutableLiveData<Data>()
     val books = _books
+    private val _book = MutableLiveData<Book>()
+    val book = _book
 
+    var gender by mutableStateOf("search/history/")
+        private set
+
+    var idBook by mutableStateOf("3319546813")
+        private set
+
+    fun setgender(value: String) {
+        this.gender = value
+    }
+
+    fun changeIdBook(value: String) {
+        this.idBook = value
+    }
 
     fun getBooks(){
         CoroutineScope(Dispatchers.IO).launch {
-            val response = repository.getAllCharacters()
+            val response = repository.getGender(gender)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
                     _books.value = response.body()
@@ -34,37 +53,18 @@ class BocksViewModel: ViewModel() {
         }
     }
 
-/*
-    fun getBooks(): List<Book> {
-        return listOf(
-            Book(
-                "Rebecca Yarros",
-                R.drawable.book1,
-                309,
-                500,
-                "",
-                BuyLink("Amazon", "https://www.amazon.com/dp/1649374178?tag=NYTBSREV-20"),
-                "The second book in the Empyrean series. Violet Sorrengail 2019s next round of training might require her to betray the man she loves.",
-                "21.00",
-                "Red Tower",
-                "IRON FLAME",
-
-            ),
-            Book(
-                    "Rebecca Yarros",
-                R.drawable.book1,
-            309,
-            500,
-            "",
-            BuyLink("Amazon", "https://www.amazon.com/dp/1649374178?tag=NYTBSREV-20"),
-            "The second book in the Empyrean series. Violet Sorrengail 2019s next round of training might require her to betray the man she loves.",
-            "21.00",
-            "Red Tower",
-            "IRON FLAME"
-            )
-        )
+    fun getBook(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = repository.getOneBook(gender, idBook)
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful){
+                    _books.value = response.body()
+                    _loading.value = false
+                }
+                else {
+                    Log.e("ERROR : ", response.message())
+                }
+            }
+        }
     }
-
- */
-
 }
