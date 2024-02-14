@@ -13,6 +13,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,9 +43,9 @@ import com.example.api_list_app.viewModel.BocksViewModel
 
 @Composable
 fun MyRecyclerBooksView(navController: NavController, booksVM: BocksViewModel){
+    booksVM.getBooks(/*"search/history"*/)
     val showLoding: Boolean by booksVM.loading.observeAsState(true)
     val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
-    booksVM.getBooks()
     if (showLoding) {
         CircularProgressIndicator(
             modifier = Modifier.width(64.dp),
@@ -47,20 +53,20 @@ fun MyRecyclerBooksView(navController: NavController, booksVM: BocksViewModel){
         )
     }
     else {
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            items(books.books) { book ->
-                MyScaffold(navController, book, booksVM)
-            }
-        }
+        MyScaffold(navController, books, booksVM)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MyScaffold(navController: NavController,  book: Book, booksVM: BocksViewModel) {
-    Scaffold (bottomBar = {MyBottomBar()}) {
-        BookItem(navController = navController, book = book, booksVM = booksVM)
+fun MyScaffold(navController: NavController,  books: Data, booksVM: BocksViewModel) {
+    Scaffold (bottomBar = {MyBottomBar(navController)}) {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            items(books.books) { book ->
+                BookItem(navController, book, booksVM)
+            }
+        }
     }
 }
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -75,9 +81,9 @@ fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel) 
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
-                .clickable {
+                .clickable(/*enabled = false*/){
                     booksVM.changeIdBook(book.id)
-                    booksVM.setgender("book")
+                    booksVM.setgender("book/")
                     navController.navigate(Routes.DetailScreen.route)
                 }
         ) {
@@ -97,9 +103,31 @@ fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel) 
 }
 
 @Composable
-fun MyBottomBar() {
-    BottomNavigation () {
+fun MyBottomBar(navController: NavController) {
+    val arrIcon = arrayOf(Icons.Filled.Home, Icons.Filled.Favorite, Icons.Filled.Settings)
+    val arrMsg = arrayOf("Home", "Favorite", "Settings")
 
+    /* toDo: Se va directamente a detail screen
+    val arrNavController = arrayOf(
+        navController.navigate(Routes.MenuScreen.route),
+        navController.navigate(Routes.FavoriteList.route),
+        navController.navigate(Routes.SettingdSreen.route)
+        )
+
+     */
+
+
+    BottomNavigation (backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary) {
+        //arrIcon.indices.forEach { index ->
+            BottomNavigationItem(
+                icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
+                label = { Text(text = "Home") },
+                selected = true,
+                onClick = {  }
+            )
+        //}
     }
+
+
 }
 

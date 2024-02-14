@@ -11,11 +11,14 @@ import retrofit2.http.Path
 
 interface APIInterface {
 
-    @GET("{query}")
-    suspend fun getGenderBook(@Path("query") charQuery: String): Response<Data>
+    @GET("search/history")
+    suspend fun getGenderBook(/*@Path("query") charQuery: String*/): Response<Data>
 
-    @GET("{query}/{id}")
-    suspend fun getBook(@Path("query") charQuery: String, @Path("id") charId: String): Response<Data>
+
+    @GET("book/{id}")
+    suspend fun getBook(/*@Path("query") charQuery: String,*/ @Path("id") charId: String): Response<Data>
+
+
 
     companion object {
         val BASE_URL = "https://www.dbooks.org/api/"

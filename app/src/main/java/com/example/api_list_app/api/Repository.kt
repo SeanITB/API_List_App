@@ -4,7 +4,7 @@ class Repository {
 
     val apiInterface = APIInterface.create()
 
-    suspend fun getGender(gender: String) = apiInterface.getGenderBook(gender)
+    suspend fun getGender(/*query: String*/) = apiInterface.getGenderBook(/*query*/)
 
-    suspend fun getOneBook(gender: String, id: String) = apiInterface.getBook(gender, id)
+    suspend fun getOneBook(/*gender: String,*/ id: String) = apiInterface.getBook(/*gender,*/ id)
 }
