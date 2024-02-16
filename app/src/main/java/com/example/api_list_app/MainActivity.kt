@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Routes.ListScreen.route,
+                        startDestination = Routes.DetailScreen.route,
                         enterTransition = {
                             fadeIn(animationSpec = tween(TIME)) + slideIntoContainer(
                                 AnimatedContentTransitionScope.SlideDirection.Left, tween(TIME)

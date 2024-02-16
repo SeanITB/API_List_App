@@ -63,7 +63,7 @@ class BocksViewModel: ViewModel() {
 
     fun getBook(gender: String, id: String){
         CoroutineScope(Dispatchers.IO).launch {
-            val response = repository.getOneBook(/*gender,*/ id)
+            val response = repository.getOneBook(/*gender, id,*/)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
                     _books.value = response.body()

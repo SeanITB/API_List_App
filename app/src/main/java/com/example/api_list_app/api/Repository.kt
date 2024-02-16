@@ -6,5 +6,5 @@ class Repository {
 
     suspend fun getGender(/*query: String*/) = apiInterface.getGenderBook(/*query*/)
 
-    suspend fun getOneBook(/*gender: String,*/ id: String) = apiInterface.getBook(/*gender,*/ id)
+    suspend fun getOneBook(/*gender: String, id: String,*/) = apiInterface.getBook(/*gender, id,*/)
 }

@@ -27,7 +27,7 @@ import com.example.api_list_app.viewModel.BocksViewModel
 @Composable
 fun DetailScreen(navController: NavController, booksVM: BocksViewModel/*, gender: String, book: String*/) {
     booksVM.getBook(booksVM.query, booksVM.idBook)
-    val b: Book by booksVM.book.observeAsState(Book("", "", "", "", "", ""))
+    val b: Book by booksVM.book.observeAsState(Book("", "", "", "", "", "", "", ""))
     Column {
         Text(text = "hola no")
         Column(
@@ -41,8 +41,8 @@ fun DetailScreen(navController: NavController, booksVM: BocksViewModel/*, gender
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
             )
-            androidx.compose.material3.Text(
-                text = b.title,
+            Text(
+                text = "${b.title} nooo",
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxSize()

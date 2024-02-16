@@ -15,8 +15,8 @@ interface APIInterface {
     suspend fun getGenderBook(/*@Path("query") charQuery: String*/): Response<Data>
 
 
-    @GET("book/{id}")
-    suspend fun getBook(/*@Path("query") charQuery: String,*/ @Path("id") charId: String): Response<Data>
+    @GET("book/3319546813")
+    suspend fun getBook(/*@Path("query") charQuery: String,@Path("id") charId: String*/): Response<Data>
 
 
 

@@ -13,7 +13,7 @@ import com.example.api_list_app.viewModel.BocksViewModel
 @Composable
 fun MenuScreen(navController: NavController, booksVM: BocksViewModel) {
     //booksVM.getBook()
-    val b: Book by booksVM.book.observeAsState(Book("", "", "", "", "", ""))
+    val b: Book by booksVM.book.observeAsState(Book("", "", "", "", "", "", "", ""))
     Column {
         Text(text = "hola q tal")
     }
