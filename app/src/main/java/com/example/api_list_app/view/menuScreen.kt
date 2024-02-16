@@ -9,7 +9,7 @@ import androidx.navigation.NavController
 import com.example.api_list_app.model.Book
 import com.example.api_list_app.navigation.Routes
 import com.example.api_list_app.viewModel.BocksViewModel
-
+/*
 @Composable
 fun MenuScreen(navController: NavController, booksVM: BocksViewModel) {
     //booksVM.getBook()
@@ -18,3 +18,5 @@ fun MenuScreen(navController: NavController, booksVM: BocksViewModel) {
         Text(text = "hola q tal")
     }
 }
+
+ */

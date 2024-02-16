@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.api_list_app.api.Repository
 import com.example.api_list_app.model.Book
+import com.example.api_list_app.model.Bookk
 import com.example.api_list_app.model.Data
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,12 +17,12 @@ import kotlinx.coroutines.withContext
 
 class BocksViewModel: ViewModel() {
 
-    private val repository = Repository()
+    private var repository = Repository()
     private val _loading = MutableLiveData(true)
     val loading = _loading
     private val _books = MutableLiveData<Data>()
     val books = _books
-    private val _book = MutableLiveData<Book>()
+    private val _book = MutableLiveData<Bookk>()
     val book = _book
 
     var query by mutableStateOf("search/history/")
@@ -63,10 +64,10 @@ class BocksViewModel: ViewModel() {
 
     fun getBook(gender: String, id: String){
         CoroutineScope(Dispatchers.IO).launch {
-            val response = repository.getOneBook(/*gender, id,*/)
+            val response = repository.getOneBook(/*gender,*/ id)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
-                    _books.value = response.body()
+                    _book.value = response.body()
                     _loading.value = false
                 }
                 else {
