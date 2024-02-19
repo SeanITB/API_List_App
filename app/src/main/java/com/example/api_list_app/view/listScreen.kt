@@ -93,4 +93,25 @@ fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel) 
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun MyScaffold(navController: NavController, books: Data, booksVM: BocksViewModel) {
+    val bottomNavigationItems = listOf(
+        BottomNavigationScreens.Favorite,
+        BottomNavigationScreens.Home,
+        BottomNavigationScreens.Settings
+    )
+
+    Scaffold (
+        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM)},
+        bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
+    ) { paddingValues ->
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            items(books.books) { book ->
+                BookItem(navController, book, booksVM)
+            }
+        }
+    }
+}
 
