@@ -46,7 +46,9 @@ import com.example.api_list_app.viewModel.BocksViewModel
 fun DetailScreen(navController: NavController, booksVM: BocksViewModel/*, gender: String, book: String*/) {
     booksVM.getBook(booksVM.query, booksVM.idBook)
     val b: BookDetail by booksVM.book.observeAsState(BookDetail("", "","","","", "", "", "", "", "", "", ""))
-    MyScaffold(navController = navController, book = b, booksVM = booksVM)
+    val isFavorite: MutableLiveData<MutableList<BookDetail>>  by booksVM.favorites.observeAsState(false) //toDo: aqui me he queado... El error de q no canvia favorito creo q es pq estava mirando el isFavorito y tendira q ser favorito
+    booksVM.getFavorites()
+    MyScaffold(navController = navController, book = b, booksVM = booksVM, favorite = isFavorite)
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -99,23 +101,22 @@ fun book (b: BookDetail) {
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel) {
+fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel, favorite: Boolean) {
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Favorite,
         BottomNavigationScreens.Home,
         BottomNavigationScreens.Settings
     )
 
-    Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM, b = book)}) { paddingValues ->
+    Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM, b = book, favorite = favorite)}) { paddingValues ->
         book(book)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail) {
-    val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
-    booksVM.getFavorites()
+fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail, favorite: Boolean) {
+
     val title =
         if (booksVM.query.length == 15) booksVM.query.subSequence(7, booksVM.query.length-1)
         else "history"
@@ -135,9 +136,18 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
                 Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
             }
             IconButton(onClick = {
-                booksVM.saveFavorite(b)
+                if (favorite)
+                    booksVM.saveFavorite(b)
+                else
+                    booksVM.deleteFavorite(b)
             }) {
-                    Icon(imageVector = if (isFavorite) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite, contentDescription = "Favorite", tint = MaterialTheme.colorScheme.background)
+                Icon(
+                    imageVector =
+                if (favorite)
+                    Icons.Filled.FavoriteBorder
+                else
+                    Icons.Filled.Favorite,
+                    contentDescription = "Favorite", tint = MaterialTheme.colorScheme.background)
             }
         }
     )

@@ -31,6 +31,7 @@ class BocksViewModel: ViewModel() {
     private val _isFavorite = MutableLiveData(false)
     val isFavorite = _isFavorite
     private val _favorites = MutableLiveData<MutableList<BookDetail>>()
+    val favorites = _favorites
 
     var query by mutableStateOf("search/history/")
         private set
@@ -50,8 +51,6 @@ class BocksViewModel: ViewModel() {
     fun changeIdBook(value: String) {
         this.idBook = value
     }
-
-
 
     fun getBooks(/*query: String*/){
         CoroutineScope(Dispatchers.IO).launch {
