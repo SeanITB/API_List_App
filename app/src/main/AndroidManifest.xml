@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.API_List_App"
+        android:name=".model.BooksAplication"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"

@@ -1,16 +1,23 @@
 package com.example.api_list_app.view
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -28,20 +35,23 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.example.api_list_app.model.Bookk
+import com.example.api_list_app.model.BookDetail
+import com.example.api_list_app.model.BooksDatabase
+import com.example.api_list_app.model.Data
 import com.example.api_list_app.navigation.BottomNavigationScreens
+import com.example.api_list_app.navigation.Routes
 import com.example.api_list_app.viewModel.BocksViewModel
 
 @Composable
 fun DetailScreen(navController: NavController, booksVM: BocksViewModel/*, gender: String, book: String*/) {
     booksVM.getBook(booksVM.query, booksVM.idBook)
-    val b: Bookk by booksVM.book.observeAsState(Bookk("", "","","","", "", "", "", "", "", "", ""))
+    val b: BookDetail by booksVM.book.observeAsState(BookDetail("", "","","","", "", "", "", "", "", "", ""))
     MyScaffold(navController = navController, book = b, booksVM = booksVM)
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun book (b: Bookk) {
+fun book (b: BookDetail) {
     ConstraintLayout(
         modifier = Modifier
             .padding(16.dp)
@@ -81,31 +91,64 @@ fun book (b: Bookk) {
                 end.linkTo(parent.end)
             }
         )
-        HyperlinkInSentenceExample(b)
+        //HyperlinkInSentenceExample(b)
+
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MyScaffold(navController: NavController, book: Bookk, booksVM: BocksViewModel) {
+fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel) {
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Favorite,
         BottomNavigationScreens.Home,
         BottomNavigationScreens.Settings
     )
 
-    Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM)}) { paddingValues ->
+    Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM, b = book)}) { paddingValues ->
         book(book)
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HyperlinkInSentenceExample(b: Bookk) {
+fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail) {
+    val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
+    booksVM.getFavorites()
+    val title =
+        if (booksVM.query.length == 15) booksVM.query.subSequence(7, booksVM.query.length-1)
+        else "history"
+    TopAppBar(
+        title = { Text(text = "$title books" ) },
+        colors = TopAppBarDefaults.largeTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.background
+        ),
+        navigationIcon = {
+            IconButton(onClick = { navController.navigate(Routes.ListScreen.route) }) {
+                Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.background)
+            }
+        },
+        actions = {
+            IconButton(onClick = { /*toDo*/ }) {
+                Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
+            }
+            IconButton(onClick = {
+                booksVM.saveFavorite(b)
+            }) {
+                    Icon(imageVector = if (isFavorite) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite, contentDescription = "Favorite", tint = MaterialTheme.colorScheme.background)
+            }
+        }
+    )
+}
+
+@Composable
+fun HyperlinkInSentenceExample(b: BookDetail) {
     val sourceText = "Check out my website: "
     val hyperlinkText = "CodingWithRashid"
     val endText = " for more awesome content."
-    val uri =  b.url
+    val uri = b.url
 
     val annotatedString = buildAnnotatedString {
         append(sourceText)
@@ -130,4 +173,5 @@ fun HyperlinkInSentenceExample(b: Bookk) {
                 }
         }
     )
+
 }

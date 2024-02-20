@@ -24,9 +24,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.api_list_app.model.BookDetail
 import com.example.api_list_app.model.Data
 import com.example.api_list_app.navigation.BottomNavigationScreens
 import com.example.api_list_app.navigation.Routes
@@ -64,33 +66,7 @@ fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel) {
-    val title =
-        if (booksVM.query.length == 15) booksVM.query.subSequence(7, booksVM.query.length-1)
-        else "history"
-    TopAppBar(
-        title = { Text(text = "$title books" ) },
-        colors = TopAppBarDefaults.largeTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            titleContentColor = MaterialTheme.colorScheme.background
-        ),
-        navigationIcon = {
-            IconButton(onClick = { navController.navigate(Routes.ListScreen.route) }) {
-                Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.background)
-            }
-        },
-        actions = {
-            IconButton(onClick = { /*toDo*/ }) {
-                Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
-            }
-            IconButton(onClick = { /*toDo*/ }) {
-                Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = "Favorite", tint = MaterialTheme.colorScheme.background)
-            }
-        }
-    )
-}
+
 
 
 @Composable

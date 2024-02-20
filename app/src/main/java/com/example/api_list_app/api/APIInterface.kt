@@ -1,7 +1,6 @@
 package com.example.api_list_app.api
 
-import com.example.api_list_app.model.Book
-import com.example.api_list_app.model.Bookk
+import com.example.api_list_app.model.BookDetail
 import com.example.api_list_app.model.Data
 import okhttp3.OkHttpClient
 import retrofit2.Response
@@ -18,7 +17,7 @@ interface APIInterface {
 
 
     @GET("book/{id}")
-    suspend fun getBook(/*@Path("query") charQuery: String,*/@Path("id") charId: String): Response<Bookk>
+    suspend fun getBook(/*@Path("query") charQuery: String,*/@Path("id") charId: String): Response<BookDetail>
 
 
 

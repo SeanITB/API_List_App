@@ -7,8 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.api_list_app.api.Repository
-import com.example.api_list_app.model.Book
-import com.example.api_list_app.model.Bookk
+import com.example.api_list_app.model.BookDetail
 import com.example.api_list_app.model.Data
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,14 +15,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class BocksViewModel: ViewModel() {
-
     private var repository = Repository()
-    private val _loading = MutableLiveData(true)
-    val loading = _loading
+
+    //Api data
+    private val _loadingApi = MutableLiveData(true)
+    val loadingApi = _loadingApi
     private val _books = MutableLiveData<Data>()
     val books = _books
-    private val _book = MutableLiveData<Bookk>()
+    private val _book = MutableLiveData<BookDetail>()
     val book = _book
+
+    //Database data
+    private val _loadingDB = MutableLiveData(true)
+    val loadingDB = _loadingDB
+    private val _isFavorite = MutableLiveData(false)
+    val isFavorite = _isFavorite
+    private val _favorites = MutableLiveData<MutableList<BookDetail>>()
 
     var query by mutableStateOf("search/history/")
         private set
@@ -52,7 +59,7 @@ class BocksViewModel: ViewModel() {
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
                     _books.value = response.body()
-                    _loading.value = false
+                    _loadingApi.value = false
                 }
                 else {
                     Log.e("ERROR : ", response.message())
@@ -68,7 +75,7 @@ class BocksViewModel: ViewModel() {
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
                     _book.value = response.body()
-                    _loading.value = false
+                    _loadingApi.value = false
                 }
                 else {
                     Log.e("ERROR : ", response.message())
@@ -77,5 +84,34 @@ class BocksViewModel: ViewModel() {
         }
     }
 
+    fun getFavorites(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = repository.getFavorites()
+            withContext(Dispatchers.Main) {
+                _favorites.value = response
+                _loadingDB.value = false
+            }
+        }
+    }
 
+    fun isFavorite(bookDetail: BookDetail) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = repository.isFavorite(bookDetail)
+            withContext(Dispatchers.Main) {
+                _isFavorite.value = response
+            }
+        }
+    }
+
+    fun saveFavorite(b: BookDetail) {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.saveAsFavorite(b)
+        }
+    }
+
+    fun deleteFavorite(b: BookDetail) {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.deleteFavorite(b)
+        }
+    }
 }
