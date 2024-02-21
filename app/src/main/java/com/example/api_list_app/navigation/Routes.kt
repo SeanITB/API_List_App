@@ -4,7 +4,9 @@ sealed class Routes (val route: String) {
     object LunchScreen: Routes("lunchScreen")
     object MenuScreen: Routes("menueScreen")
     object ListScreen: Routes("listScreen")
-    object FavoriteList: Routes("listScreen")
-    object DetailScreen: Routes("detailScreen")
+    object FavoriteScreen: Routes("favoriteScreen")
+    object DetailScreen: Routes("detailScreen?lastScreen={lastScreen}") {
+        fun createRouteToDetail(lastScreen: String?) = "detailScreen?lastScreen=$lastScreen"
+    }
     object SettingdSreen: Routes("detailScreen")
 }

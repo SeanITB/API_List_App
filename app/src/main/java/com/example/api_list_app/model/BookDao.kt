@@ -10,7 +10,7 @@ interface BookDao {
     @Query("SELECT * FROM BookDetail")
     suspend fun getAllBooks(): MutableList<BookDetail>
     @Query("SELECT * FROM BookDetail WHERE id =:bookId")
-    suspend fun getBookById(bookId: Int): MutableList<BookDetail>
+    suspend fun getBookById(bookId: String): MutableList<BookDetail>
     @Insert
     suspend fun addBook(book: BookDetail)
     @Delete

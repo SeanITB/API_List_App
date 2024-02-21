@@ -105,12 +105,14 @@ class BocksViewModel: ViewModel() {
     fun saveFavorite(b: BookDetail) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.saveAsFavorite(b)
+            _isFavorite.postValue(true)
         }
     }
 
     fun deleteFavorite(b: BookDetail) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.deleteFavorite(b)
+            _isFavorite.postValue(false)
         }
     }
 }

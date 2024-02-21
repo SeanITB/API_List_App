@@ -15,9 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.api_list_app.navigation.Routes
 import com.example.api_list_app.ui.theme.API_List_AppTheme
 import com.example.api_list_app.view.DetailScreen
+import com.example.api_list_app.view.FavoriteScreen
 import com.example.api_list_app.view.LunchScreen
 import com.example.api_list_app.view.MyRecyclerBooksView
 import com.example.api_list_app.viewModel.BocksViewModel
@@ -63,7 +65,16 @@ class MainActivity : ComponentActivity() {
                         composable(Routes.LunchScreen.route) { LunchScreen(navController) }
                         //composable(Routes.MenuScreen.route,) { MenuScreen(navController, booksVM)}
                         composable(Routes.ListScreen.route) { MyRecyclerBooksView(navController, booksVM) }
-                        composable(Routes.DetailScreen.route) { DetailScreen(navController, booksVM) }
+                        composable(
+                            Routes.DetailScreen.route,
+                            arguments = listOf(navArgument("lastScreen", { defaultValue = "listScreen"}))
+                        ) { backStackEntry ->
+                            DetailScreen(
+                                navController,
+                                booksVM,
+                                backStackEntry.arguments?.getString("lastScreen")
+                            ) }
+                        composable(Routes.FavoriteScreen.route) { FavoriteScreen(navController, booksVM) }
                     }
                 }
             }

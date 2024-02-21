@@ -17,6 +17,6 @@ class Repository {
     //Database functions
     suspend fun saveAsFavorite(book: BookDetail) = daoInterfase.addBook(book)
     suspend fun deleteFavorite(b: BookDetail) = daoInterfase.deleteBook(b)
-    suspend fun isFavorite(b: BookDetail) = daoInterfase.getBookById(b.id.toInt()).isNotEmpty()
+    suspend fun isFavorite(b: BookDetail) = daoInterfase.getBookById(b.id).isNotEmpty()
     suspend fun getFavorites() = daoInterfase.getAllBooks()
 }

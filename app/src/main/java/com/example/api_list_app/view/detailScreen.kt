@@ -36,19 +36,17 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.api_list_app.model.BookDetail
-import com.example.api_list_app.model.BooksDatabase
-import com.example.api_list_app.model.Data
 import com.example.api_list_app.navigation.BottomNavigationScreens
 import com.example.api_list_app.navigation.Routes
 import com.example.api_list_app.viewModel.BocksViewModel
 
 @Composable
-fun DetailScreen(navController: NavController, booksVM: BocksViewModel/*, gender: String, book: String*/) {
+fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusScreen: String?) {
     booksVM.getBook(booksVM.query, booksVM.idBook)
     val b: BookDetail by booksVM.book.observeAsState(BookDetail("", "","","","", "", "", "", "", "", "", ""))
-    val isFavorite: MutableLiveData<MutableList<BookDetail>>  by booksVM.favorites.observeAsState(false) //toDo: aqui me he queado... El error de q no canvia favorito creo q es pq estava mirando el isFavorito y tendira q ser favorito
+    val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
     booksVM.getFavorites()
-    MyScaffold(navController = navController, book = b, booksVM = booksVM, favorite = isFavorite)
+    MyScaffold(navController = navController, book = b, booksVM = booksVM, favorite = isFavorite, previusScreen = previusScreen)
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -94,32 +92,35 @@ fun book (b: BookDetail) {
             }
         )
         //HyperlinkInSentenceExample(b)
-
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel, favorite: Boolean) {
+fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel, favorite: Boolean, previusScreen: String?) {
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Favorite,
         BottomNavigationScreens.Home,
         BottomNavigationScreens.Settings
     )
 
-    Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM, b = book, favorite = favorite)}) { paddingValues ->
+    Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM, b = book, favorite = favorite, previusScreen = previusScreen)}) { paddingValues ->
         book(book)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail, favorite: Boolean) {
-
+fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail, favorite: Boolean, previusScreen: String?) {
+    booksVM.isFavorite(b)
     val title =
         if (booksVM.query.length == 15) booksVM.query.subSequence(7, booksVM.query.length-1)
         else "history"
+    val root = when(previusScreen) {
+        "listScreen" -> Routes.ListScreen.route
+        else -> Routes.FavoriteScreen.route
+    }
     TopAppBar(
         title = { Text(text = "$title books" ) },
         colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -127,7 +128,10 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
             titleContentColor = MaterialTheme.colorScheme.background
         ),
         navigationIcon = {
-            IconButton(onClick = { navController.navigate(Routes.ListScreen.route) }) {
+            IconButton(onClick = {
+                navController.navigate(
+                    root
+                ) }) {
                 Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.background)
             }
         },
@@ -136,14 +140,14 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
                 Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
             }
             IconButton(onClick = {
-                if (favorite)
+                if (!favorite)
                     booksVM.saveFavorite(b)
                 else
                     booksVM.deleteFavorite(b)
             }) {
                 Icon(
                     imageVector =
-                if (favorite)
+                if (!favorite)
                     Icons.Filled.FavoriteBorder
                 else
                     Icons.Filled.Favorite,
@@ -159,7 +163,6 @@ fun HyperlinkInSentenceExample(b: BookDetail) {
     val hyperlinkText = "CodingWithRashid"
     val endText = " for more awesome content."
     val uri = b.url
-
     val annotatedString = buildAnnotatedString {
         append(sourceText)
         withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline, color = Color.Blue)) {

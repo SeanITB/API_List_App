@@ -35,15 +35,9 @@ import com.example.api_list_app.navigation.Routes
 import com.example.api_list_app.viewModel.BocksViewModel
 
 
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel) {
-    val title =
-        if (booksVM.query.length == 15) booksVM.query.subSequence(7, booksVM.query.length-1)
-        else "history"
+fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel, title: CharSequence) {
     TopAppBar(
         title = { Text(text = "$title books" ) },
         colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -66,9 +60,6 @@ fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel) {
     )
 }
 
-
-
-
 @Composable
 fun MyBottomBar(navController: NavController, bottomNavItems:  List<BottomNavigationScreens>) {
     BottomNavigation(backgroundColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.background) {
@@ -90,5 +81,13 @@ fun MyBottomBar(navController: NavController, bottomNavItems:  List<BottomNaviga
         }
     }
 }
+
+
+
+
+
+
+
+
 
 

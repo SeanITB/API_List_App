@@ -12,12 +12,22 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -27,6 +37,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.api_list_app.model.Book
@@ -39,8 +50,13 @@ import com.example.api_list_app.viewModel.BocksViewModel
 @Composable
 fun MyRecyclerBooksView(navController: NavController, booksVM: BocksViewModel){
     booksVM.getBooks(/*"search/history"*/)
+    val actualScreen: String = "listScreen"
     val showLoding: Boolean by booksVM.loadingApi.observeAsState(true)
     val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
+    val title =
+        if (booksVM.query.length == 15) booksVM.query.subSequence(7, booksVM.query.length-1)
+        else "history"
+
     if (showLoding) {
         CircularProgressIndicator(
             modifier = Modifier.width(64.dp),
@@ -48,14 +64,14 @@ fun MyRecyclerBooksView(navController: NavController, booksVM: BocksViewModel){
         )
     }
     else {
-        MyScaffold(navController, books, booksVM)
+        MyScaffold(navController, books, booksVM, actualScreen, title)
     }
 }
 
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel) {
+fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel, actualSreen: String) {
     Card(
         border = BorderStroke(2.dp, Color.LightGray),
         shape = RoundedCornerShape(8.dp),
@@ -68,7 +84,7 @@ fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel) 
                 .clickable(/*enabled = false*/) {
                     booksVM.changeIdBook(book.id)
                     booksVM.setgender("book/")
-                    navController.navigate(Routes.DetailScreen.route)
+                    navController.navigate(Routes.DetailScreen.createRouteToDetail(actualSreen))
                 }
         ) {
             GlideImage(
@@ -89,22 +105,27 @@ fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel) 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MyScaffold(navController: NavController, books: Data, booksVM: BocksViewModel) {
+fun MyScaffold(navController: NavController, books: Data, booksVM: BocksViewModel, actualSreen: String, title: CharSequence) {
+
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Favorite,
         BottomNavigationScreens.Home,
         BottomNavigationScreens.Settings
     )
 
+
     Scaffold (
-        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM)},
+        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM, title = title)},
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             items(books.books) { book ->
-                BookItem(navController, book, booksVM)
+                BookItem(navController, book, booksVM, actualSreen)
             }
         }
     }
 }
+
+
+
 
