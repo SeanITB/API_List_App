@@ -12,7 +12,7 @@ import retrofit2.http.Path
 
 interface APIInterface {
 
-    @GET("search/history")
+    @GET("search/philosophy")
     suspend fun getGenderBook(/*@Path("query") charQuery: String*/): Response<Data>
 
 
