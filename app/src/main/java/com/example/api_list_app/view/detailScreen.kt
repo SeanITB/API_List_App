@@ -2,8 +2,10 @@ package com.example.api_list_app.view
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
@@ -28,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
@@ -63,7 +66,8 @@ fun book (b: BookDetail) {
             contentDescription = b.title,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(200.dp)
+                .width(150.dp)
+                .height(250.dp)
                 .constrainAs(image) {
                     top.linkTo(parent.top, margin = 100.dp)
                     bottom.linkTo(url.top)
@@ -75,7 +79,11 @@ fun book (b: BookDetail) {
             text = b.title,
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            modifier = Modifier.constrainAs(titele) {
+            fontWeight = FontWeight.Bold,
+            //maxLines = 2,
+            modifier = Modifier
+                .width(200.dp)
+                .constrainAs(titele) {
                 top.linkTo(image.top)
                 start.linkTo(image.end)
                 end.linkTo(parent.end)
@@ -86,7 +94,7 @@ fun book (b: BookDetail) {
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.constrainAs(author) {
-                top.linkTo(titele.bottom)
+                top.linkTo(titele.bottom, margin = 20.dp)
                 start.linkTo(image.end)
                 end.linkTo(parent.end)
             }
@@ -99,12 +107,6 @@ fun book (b: BookDetail) {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel, favorite: Boolean, previusScreen: String?) {
-    val bottomNavigationItems = listOf(
-        BottomNavigationScreens.Favorite,
-        BottomNavigationScreens.Home,
-        BottomNavigationScreens.Settings
-    )
-
     Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM, b = book, favorite = favorite, previusScreen = previusScreen)}) { paddingValues ->
         book(book)
     }

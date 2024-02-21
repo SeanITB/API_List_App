@@ -47,18 +47,17 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScre
         BottomNavigationScreens.Settings
     )
 
-
     Scaffold (
         topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM, title = title)},
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             if (actualScreen.equals("favoriteScreen"))
-                items(books.books) { book ->
+                items(favorites) { book ->
                     BookItem(navController, book, booksVM, actualScreen)
                 }
             else
-                items(favorites) { book ->
+                items(books.books) { book ->
                     BookItem(navController, book, booksVM, actualScreen)
                 }
 
