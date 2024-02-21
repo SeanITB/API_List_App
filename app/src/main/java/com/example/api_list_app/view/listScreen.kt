@@ -41,6 +41,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.api_list_app.model.Book
+import com.example.api_list_app.model.BookDetail
 import com.example.api_list_app.model.Data
 import com.example.api_list_app.navigation.BottomNavigationScreens
 import com.example.api_list_app.navigation.Routes
@@ -52,7 +53,6 @@ fun MyRecyclerBooksView(navController: NavController, booksVM: BocksViewModel){
     booksVM.getBooks(/*"search/history"*/)
     val actualScreen: String = "listScreen"
     val showLoding: Boolean by booksVM.loadingApi.observeAsState(true)
-    val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
     val title =
         if (booksVM.query.length == 15) booksVM.query.subSequence(7, booksVM.query.length-1)
         else "history"
@@ -64,7 +64,7 @@ fun MyRecyclerBooksView(navController: NavController, booksVM: BocksViewModel){
         )
     }
     else {
-        MyScaffold(navController, books, booksVM, actualScreen, title)
+        MyScaffold(navController,  booksVM, actualScreen, title)
     }
 }
 
@@ -102,29 +102,7 @@ fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel, 
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun MyScaffold(navController: NavController, books: Data, booksVM: BocksViewModel, actualSreen: String, title: CharSequence) {
 
-    val bottomNavigationItems = listOf(
-        BottomNavigationScreens.Favorite,
-        BottomNavigationScreens.Home,
-        BottomNavigationScreens.Settings
-    )
-
-
-    Scaffold (
-        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM, title = title)},
-        bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
-    ) { paddingValues ->
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            items(books.books) { book ->
-                BookItem(navController, book, booksVM, actualSreen)
-            }
-        }
-    }
-}
 
 
 

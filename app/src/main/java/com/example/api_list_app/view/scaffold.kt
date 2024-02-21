@@ -23,6 +23,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,36 @@ import com.example.api_list_app.navigation.BottomNavigationScreens
 import com.example.api_list_app.navigation.Routes
 import com.example.api_list_app.viewModel.BocksViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScreen: String, title: CharSequence) {
+    val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
+    val favorites: MutableList<BookDetail> by booksVM.favorites.observeAsState(mutableListOf())
+    val bottomNavigationItems = listOf(
+        BottomNavigationScreens.Favorite,
+        BottomNavigationScreens.Home,
+        BottomNavigationScreens.Settings
+    )
+
+
+    Scaffold (
+        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM, title = title)},
+        bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
+    ) { paddingValues ->
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            if (actualScreen.equals("favoriteScreen"))
+                items(books.books) { book ->
+                    BookItem(navController, book, booksVM, actualScreen)
+                }
+            else
+                items(favorites) { book ->
+                    BookItem(navController, book, booksVM, actualScreen)
+                }
+
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

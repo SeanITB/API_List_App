@@ -49,26 +49,21 @@ fun FavoriteScreen(navController: NavController, booksVM: BocksViewModel) {
     booksVM.getFavorites()
     val actualScreen = "favoriteScreen"
     val showLoding: Boolean by booksVM.loadingDB.observeAsState(true)
-    val favorites: MutableList<BookDetail> by booksVM.favorites.observeAsState(mutableListOf())
+    val title = "Favorite"
     if (showLoding) {
         CircularProgressIndicator(
             modifier = Modifier.width(64.dp),
             color = MaterialTheme.colorScheme.primary
         )
     } else {
-        MyScaffold(navController, favorites, booksVM, actualScreen)
+        MyScaffold(navController, booksVM, actualScreen, title)
     }
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun BookItem(navController: NavController, generalBook: Book,  favoriteBook: BookDetail, booksVM: BocksViewModel, actualScreen: String?) {
-    val bookk: MutableList<Any> = mutableListOf() // toDo: estoy intentando hacer solo una funcion de BookItem
-    bookk.add( when (actualScreen) {
-        "listSreen" -> generalBook
-        else -> favoriteBook
-        }
-    )
+fun BookItem(navController: NavController, favoriteBook: BookDetail, booksVM: BocksViewModel, actualScreen: String?) {
+
     Card(
         border = BorderStroke(2.dp, Color.LightGray),
         shape = RoundedCornerShape(8.dp),
@@ -79,19 +74,19 @@ fun BookItem(navController: NavController, generalBook: Book,  favoriteBook: Boo
                 .padding(16.dp)
                 .fillMaxWidth()
                 .clickable(/*enabled = false*/) {
-                    booksVM.changeIdBook(bookk[0].id)
+                    booksVM.changeIdBook(favoriteBook.id)
                     booksVM.setgender("book/")
                     navController.navigate(Routes.DetailScreen.createRouteToDetail(actualScreen))
                 }
         ) {
             GlideImage(
-                model = book.image,
-                contentDescription = book.title,
+                model = favoriteBook.id,
+                contentDescription = favoriteBook.id,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
             )
             Text(
-                text = book.title,
+                text = favoriteBook.id,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxSize())
@@ -99,25 +94,3 @@ fun BookItem(navController: NavController, generalBook: Book,  favoriteBook: Boo
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun MyScaffold(navController: NavController, bf: MutableList<BookDetail>, booksVM: BocksViewModel, actualScreen: String?) {
-    val bottomNavigationItems = listOf(
-        BottomNavigationScreens.Favorite,
-        BottomNavigationScreens.Home,
-        BottomNavigationScreens.Settings
-    )
-    val title = "Favorite"
-
-    Scaffold (
-        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM, title = title)},
-        bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
-    ) { paddingValues ->
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            items(bf) { book ->
-                BookItem(navController, book, booksVM, actualScreen)
-            }
-        }
-    }
-}
