@@ -97,7 +97,7 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel, actual
 @Composable
 fun SerchGenger(booksVM: BocksViewModel) {
     //toDo: me quede aqui
-    val genders = arrayOf("recent", "history", "python", "kotlin", "java", "android", "computer+science", "science+mathematics", "economics+finance")
+    val genders = arrayOf("computer+science", "science+mathematics", "economics+finance", "business+management", "politics+government", "history", "philosophy", "python", "kotlin", "java", "android", )
     Row {
         Text(text = """
                     PLAY 
