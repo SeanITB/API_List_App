@@ -20,6 +20,7 @@ import com.example.api_list_app.navigation.Routes
 import com.example.api_list_app.ui.theme.API_List_AppTheme
 import com.example.api_list_app.view.DetailScreen
 import com.example.api_list_app.view.FavoriteScreen
+import com.example.api_list_app.view.HomeScreen
 import com.example.api_list_app.view.LunchScreen
 import com.example.api_list_app.view.MyRecyclerBooksView
 import com.example.api_list_app.viewModel.BocksViewModel
@@ -63,7 +64,7 @@ class MainActivity : ComponentActivity() {
                         }
                     ) {
                         composable(Routes.LunchScreen.route) { LunchScreen(navController) }
-                        //composable(Routes.MenuScreen.route,) { MenuScreen(navController, booksVM)}
+                        composable(Routes.HomeScreen.route,) { HomeScreen(navController, booksVM)}
                         composable(Routes.ListScreen.route) { MyRecyclerBooksView(navController, booksVM) }
                         composable(
                             Routes.DetailScreen.route,

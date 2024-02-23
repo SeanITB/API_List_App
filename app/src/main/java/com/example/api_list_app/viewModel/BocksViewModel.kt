@@ -33,6 +33,12 @@ class BocksViewModel: ViewModel() {
     private val _favorites = MutableLiveData<MutableList<BookDetail>>()
     val favorites = _favorites
 
+    var bookGender by mutableStateOf("history")
+        private set
+
+    var expanded by mutableStateOf(false)
+        private set
+
     var query by mutableStateOf("search/history/")
         private set
 
@@ -42,14 +48,17 @@ class BocksViewModel: ViewModel() {
     var idBook by mutableStateOf("3319546813")
         private set
 
-    fun setgender(value: String) {
-        this.query = value
+
+    fun changeGender(value: String) {
+        this.bookGender = value
     }
-
-
 
     fun changeIdBook(value: String) {
         this.idBook = value
+    }
+
+    fun changeExpanded (value: Boolean) {
+        this.expanded = value
     }
 
     fun getBooks(/*query: String*/){
