@@ -55,12 +55,14 @@ fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusS
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun book (b: BookDetail) {
+    val textWith: Int = 200
+    val textMargin: Int = 20
     ConstraintLayout(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        val (image, titele, author, url) = createRefs()
+        val (image, titele, subtitele, author, description, bookInfo) = createRefs()
         GlideImage(
             model = b.image,
             contentDescription = b.title,
@@ -70,7 +72,7 @@ fun book (b: BookDetail) {
                 .height(250.dp)
                 .constrainAs(image) {
                     top.linkTo(parent.top, margin = 100.dp)
-                    bottom.linkTo(url.top)
+                    //bottom.linkTo(description.top)
                     start.linkTo(parent.start)
                     end.linkTo(titele.start)
                 }
@@ -78,26 +80,75 @@ fun book (b: BookDetail) {
         Text(
             text = b.title,
             style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Start,
             fontWeight = FontWeight.Bold,
             //maxLines = 2,
             modifier = Modifier
-                .width(200.dp)
+                .width(textWith.dp)
                 .constrainAs(titele) {
-                top.linkTo(image.top)
-                start.linkTo(image.end)
-                end.linkTo(parent.end)
-            }
+                    top.linkTo(image.top)
+                    //bottom.linkTo(subtitele.top)
+                    start.linkTo(image.end, margin = 5.dp)
+                    end.linkTo(parent.end)
+                }
+        )
+        Text(
+            text = b.subtitle,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Start,
+            modifier = Modifier
+                .width(textWith.dp)
+                .constrainAs(subtitele) {
+                    top.linkTo(titele.bottom)
+                    //bottom.linkTo(author.top)
+                    start.linkTo(titele.start)
+                    //end.linkTo(parent.end)
+                }
         )
         Text(
             text = b.authors,
             style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.constrainAs(author) {
-                top.linkTo(titele.bottom, margin = 20.dp)
-                start.linkTo(image.end)
-                end.linkTo(parent.end)
+            textAlign = TextAlign.Start,
+            modifier = Modifier
+                .width(textWith.dp)
+                .constrainAs(author) {
+                top.linkTo(subtitele.bottom, margin = textMargin.dp)
+                //bottom.linkTo(bookInfo.top)
+                start.linkTo(titele.start)
+                //end.linkTo(parent.end)
             }
+        )
+        Text(
+            text = """
+                Publisher: ${b.publisher}
+                Subject: toDo
+                Language: Englesh
+                Pages: ${b.pages}
+                Year: ${b.year}
+            """.trimIndent(),
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Start,
+            modifier = Modifier
+                .width(textWith.dp)
+                .constrainAs(bookInfo) {
+                    top.linkTo(author.bottom, margin = textMargin.dp)
+                    //bottom.linkTo(description.top)
+                    start.linkTo(titele.start)
+                    //end.linkTo(parent.end)
+                }
+        )
+        Text(
+            text = b.description,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Start,
+            modifier = Modifier
+                .width(400.dp)
+                .constrainAs(description) {
+                    top.linkTo(bookInfo.bottom, margin = textMargin.dp)
+                    //bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
         )
         //HyperlinkInSentenceExample(b)
     }

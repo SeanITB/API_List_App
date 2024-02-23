@@ -19,8 +19,6 @@ interface APIInterface {
     @GET("book/{id}")
     suspend fun getBook(/*@Path("query") charQuery: String,*/@Path("id") charId: String): Response<BookDetail>
 
-
-
     companion object {
         val BASE_URL = "https://www.dbooks.org/api/"
         fun create(): APIInterface {
