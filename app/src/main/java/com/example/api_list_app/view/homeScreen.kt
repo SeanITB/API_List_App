@@ -19,11 +19,15 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -48,7 +52,7 @@ import com.example.api_list_app.viewModel.BocksViewModel
 
 @Composable
 fun HomeScreen(navController: NavController, booksVM: BocksViewModel) {
-    booksVM.getBooks(/*"search/history"*/)
+    booksVM.getBooks(booksVM.bookGender)
     val actualScreen: String = "homeScreen"
     val showLoding: Boolean by booksVM.loadingApi.observeAsState(true)
     val title = "Home"
@@ -68,40 +72,47 @@ fun HomeScreen(navController: NavController, booksVM: BocksViewModel) {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel, actualScreen: String, title: CharSequence) {
-    val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Favorite,
         BottomNavigationScreens.Home,
         BottomNavigationScreens.Settings
     )
-
+    val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
+    //val body = bodyHomeScreen(navController = navController, booksVM = booksVM, actualScreen = actualScreen)
     Scaffold (
         topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM, title = title)},
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
         Column {
+            Spacer(modifier = Modifier.height(100.dp))
             Text(text = "Welcom to the best Libery App")
-            //SerchGenger(booksVM)
-            LazyVerticalGrid(columns = GridCells.Fixed(2), horizontalArrangement = Arrangement.spacedBy(4.dp), verticalArrangement = Arrangement.spacedBy(4.dp), content = {
-                items(books.books) { book ->
-                    BookItemHome(navController, book, booksVM, actualScreen)
+            SerchGenger(navController, booksVM)
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                content = {
+
+                    items(books.books) { book ->
+                        BookItemHome(navController, book, booksVM, actualScreen)
+                    }
                 }
-            })
+            )
         }
-        //Spacer(modifier = Modifier.height(50.dp))
     }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SerchGenger(booksVM: BocksViewModel) {
-    //toDo: me quede aqui
-    val genders = arrayOf("computer+science", "science+mathematics", "economics+finance", "business+management", "politics+government", "history", "philosophy", "python", "kotlin", "java", "android", )
+fun SerchGenger(navController: NavController, booksVM: BocksViewModel) {
+    val genders = arrayOf("Computer Science", "Science Mathematics", "Economics Finance", "Business Management", "Politics Government", "History", "Philosophy", "Kotlin", "Android")
+    val actualScreen: String = "homeSreen"
     Row {
         Text(text = """
-                    PLAY 
-                    MODE
+                    Book
+                    Gender
                 """.trimIndent(), fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.padding(16.dp))
         Box(
@@ -129,15 +140,22 @@ fun SerchGenger(booksVM: BocksViewModel) {
                 onDismissRequest = { booksVM.changeExpanded(false) },
                 modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
             ) {
-                genders.forEach { difficulty ->
+                genders.forEach { gender ->
                     DropdownMenuItem(
-                        text = { androidx.compose.material3.Text(text = difficulty, color = MaterialTheme.colorScheme.background) },
+                        text = { androidx.compose.material3.Text(text = gender, color = MaterialTheme.colorScheme.background) },
                         onClick = {
                             booksVM.changeExpanded(false)
-                            booksVM.changeGender(difficulty)
+                            booksVM.changeGender(gender)
                         }
                     )
                 }
+            }
+            Button(
+                onClick = {
+                    navController.navigate(Routes.ListScreen.createRouteToList(actualScreen))
+                }
+            ) {
+                Icon(imageVector = Icons.Filled.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
             }
         }
     }
@@ -174,14 +192,14 @@ fun BookItemHome(navController: NavController, book: Book, booksVM: BocksViewMod
                 modifier = Modifier
             )
             Spacer(modifier = Modifier.height(textMarginHeight.dp))
-            androidx.compose.material3.Text(
+            Text(
                 text = book.title,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxSize()
             )
             Spacer(modifier = Modifier.height(textMarginHeight.dp))
-            androidx.compose.material3.Text(
+            Text(
                 text = book.authors,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,

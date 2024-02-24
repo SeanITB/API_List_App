@@ -45,7 +45,7 @@ import com.example.api_list_app.viewModel.BocksViewModel
 
 @Composable
 fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusScreen: String?) {
-    booksVM.getBook(booksVM.query, booksVM.idBook)
+    booksVM.getBook(booksVM.bookGender, booksVM.idBook)
     val b: BookDetail by booksVM.book.observeAsState(BookDetail("", "","","","", "", "", "", "", "", "", ""))
     val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
     booksVM.getFavorites()
@@ -167,9 +167,9 @@ fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksVie
 @Composable
 fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail, favorite: Boolean, previusScreen: String?) {
     booksVM.isFavorite(b)
-    val title =
-        if (booksVM.query.length == 15) booksVM.query.subSequence(7, booksVM.query.length-1)
-        else "history"
+    val title = booksVM.bookGender
+        /*if (booksVM.query.length == 15) booksVM.query.subSequence(7, booksVM.query.length-1)
+        else "history"*/
     val root = when(previusScreen) {
         "listScreen" -> Routes.ListScreen.route
         else -> Routes.FavoriteScreen.route

@@ -10,7 +10,7 @@ class Repository {
     var daoInterfase = BooksAplication.database.bookDao()
 
     //Api conection
-    suspend fun getGender(/*query: String*/) = apiInterface.getGenderBook(/*query*/)
+    suspend fun getGender(gender: String) = apiInterface.getGenderBook(gender)
 
     suspend fun getOneBook(/*gender: String,*/ id: String) = apiInterface.getBook(/*gender,*/ id)
 

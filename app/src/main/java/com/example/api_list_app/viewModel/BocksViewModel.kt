@@ -33,15 +33,14 @@ class BocksViewModel: ViewModel() {
     private val _favorites = MutableLiveData<MutableList<BookDetail>>()
     val favorites = _favorites
 
-    var bookGender by mutableStateOf("history")
-        private set
-
     var expanded by mutableStateOf(false)
         private set
 
-    var query by mutableStateOf("search/history/")
+    var bookGender by mutableStateOf("recent")
         private set
 
+    //var query by mutableStateOf("search/${this.bookGender}/")
+      //  private set
 
     //var query = "search/history"
 
@@ -50,7 +49,17 @@ class BocksViewModel: ViewModel() {
 
 
     fun changeGender(value: String) {
-        this.bookGender = value
+        this.bookGender = when(value) {
+            "Computer Science" -> "computer+science"
+            "Science Mathematics" ->"science+mathematics"
+            "Economics Finance" -> "economics+finance"
+            "Business Management" -> "business+management"
+            "Politics Government" -> "politics+government"
+            "History" -> "history"
+            "Philosophy" -> "philosophy"
+            "Kotlin" -> "kotlin"
+            else -> "android"
+        }
     }
 
     fun changeIdBook(value: String) {
@@ -61,9 +70,9 @@ class BocksViewModel: ViewModel() {
         this.expanded = value
     }
 
-    fun getBooks(/*query: String*/){
+    fun getBooks(gender: String){
         CoroutineScope(Dispatchers.IO).launch {
-            val response = repository.getGender(/*query*/)
+            val response = repository.getGender(gender)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
                     _books.value = response.body()

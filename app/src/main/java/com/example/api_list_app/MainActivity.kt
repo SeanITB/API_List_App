@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Routes.ListScreen.route,
+                        startDestination = Routes.HomeScreen.route,
                         enterTransition = {
                             fadeIn(animationSpec = tween(TIME)) + slideIntoContainer(
                                 AnimatedContentTransitionScope.SlideDirection.Left, tween(TIME)
@@ -65,10 +65,22 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Routes.LunchScreen.route) { LunchScreen(navController) }
                         composable(Routes.HomeScreen.route,) { HomeScreen(navController, booksVM)}
-                        composable(Routes.ListScreen.route) { MyRecyclerBooksView(navController, booksVM) }
+                        composable(
+                            Routes.ListScreen.route,
+                            arguments = listOf(navArgument("lastScreen") {
+                                defaultValue = "listScreen"
+                            })
+                        ) { backStackEntry ->
+                            MyRecyclerBooksView(
+                                navController,
+                                booksVM,
+                                backStackEntry.arguments?.getString("lastScreen")
+                            ) }
                         composable(
                             Routes.DetailScreen.route,
-                            arguments = listOf(navArgument("lastScreen", { defaultValue = "listScreen"}))
+                            arguments = listOf(navArgument("lastScreen") {
+                                defaultValue = "listScreen"
+                            })
                         ) { backStackEntry ->
                             DetailScreen(
                                 navController,

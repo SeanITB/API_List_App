@@ -31,13 +31,13 @@ import com.example.api_list_app.viewModel.BocksViewModel
 
 
 @Composable
-fun MyRecyclerBooksView(navController: NavController, booksVM: BocksViewModel){
-    booksVM.getBooks(/*"search/history"*/)
+fun MyRecyclerBooksView(navController: NavController, booksVM: BocksViewModel, lastSreen: String?){
+    booksVM.getBooks(booksVM.bookGender)
     val actualScreen: String = "listScreen"
     val showLoding: Boolean by booksVM.loadingApi.observeAsState(true)
-    val title =
-        if (booksVM.query.length == 15) booksVM.query.subSequence(7, booksVM.query.length-1)
-        else "history"
+    val title = booksVM.bookGender
+        /*if (booksVM.query.length == 15) booksVM.query.subSequence(7, booksVM.query.length-1)
+        else "history"*/
 
     if (showLoding) {
         CircularProgressIndicator(
