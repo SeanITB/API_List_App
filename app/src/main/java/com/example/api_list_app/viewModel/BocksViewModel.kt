@@ -133,4 +133,104 @@ class BocksViewModel: ViewModel() {
             _isFavorite.postValue(false)
         }
     }
+
+    fun getToRead(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = repository.getToRead()
+            withContext(Dispatchers.Main) {
+                _favorites.value = response
+                _loadingDB.value = false
+            }
+        }
+    }
+
+    fun isToRead(bookDetail: BookDetail) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = repository.isToRead(bookDetail)
+            withContext(Dispatchers.Main) {
+                _isFavorite.value = response
+            }
+        }
+    }
+
+    fun saveAsToRead(b: BookDetail) {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.saveAsToRead(b)
+            _isFavorite.postValue(true)
+        }
+    }
+
+    fun deleteToRead(b: BookDetail) {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.deleteToRead(b)
+            _isFavorite.postValue(false)
+        }
+    }
+
+    fun getReading(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = repository.getReading()
+            withContext(Dispatchers.Main) {
+                _favorites.value = response
+                _loadingDB.value = false
+            }
+        }
+    }
+
+    fun isReading(bookDetail: BookDetail) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = repository.isReading(bookDetail)
+            withContext(Dispatchers.Main) {
+                _isFavorite.value = response
+            }
+        }
+    }
+
+    fun saveAsReading(b: BookDetail) {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.saveAsReading(b)
+            _isFavorite.postValue(true)
+        }
+    }
+
+    fun deleteReading(b: BookDetail) {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.deleteReading(b)
+            _isFavorite.postValue(false)
+        }
+    }
+
+    fun getRead(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = repository.getRead()
+            withContext(Dispatchers.Main) {
+                _favorites.value = response
+                _loadingDB.value = false
+            }
+        }
+    }
+
+    fun isRead(bookDetail: BookDetail) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = repository.isRead(bookDetail)
+            withContext(Dispatchers.Main) {
+                _isFavorite.value = response
+            }
+        }
+    }
+
+    fun saveAsRead(b: BookDetail) {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.saveAsRead(b)
+            _isFavorite.postValue(true)
+        }
+    }
+
+    fun deleteRead(b: BookDetail) {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.deleteRead(b)
+            _isFavorite.postValue(false)
+        }
+    }
+
 }
