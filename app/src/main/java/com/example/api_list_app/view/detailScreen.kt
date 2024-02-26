@@ -47,9 +47,9 @@ import com.example.api_list_app.viewModel.BocksViewModel
 fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusScreen: String?) {
     booksVM.getBook(booksVM.bookGender, booksVM.idBook)
     val b: BookDetail by booksVM.book.observeAsState(BookDetail("", "","","","", "", "", "", "", "", "", ""))
-    val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
+
     booksVM.getFavorites()
-    MyScaffold(navController = navController, book = b, booksVM = booksVM, favorite = isFavorite, previusScreen = previusScreen)
+    MyScaffold(navController = navController, book = b, booksVM = booksVM, previusScreen = previusScreen)
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -112,11 +112,11 @@ fun book (b: BookDetail) {
             modifier = Modifier
                 .width(textWith.dp)
                 .constrainAs(author) {
-                top.linkTo(subtitele.bottom, margin = textMargin.dp)
-                //bottom.linkTo(bookInfo.top)
-                start.linkTo(titele.start)
-                //end.linkTo(parent.end)
-            }
+                    top.linkTo(subtitele.bottom, margin = textMargin.dp)
+                    //bottom.linkTo(bookInfo.top)
+                    start.linkTo(titele.start)
+                    //end.linkTo(parent.end)
+                }
         )
         Text(
             text = """
@@ -157,16 +157,18 @@ fun book (b: BookDetail) {
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel, favorite: Boolean, previusScreen: String?) {
-    Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM, b = book, favorite = favorite, previusScreen = previusScreen)}) { paddingValues ->
+fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel, previusScreen: String?) {
+    Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM, b = book, previusScreen = previusScreen)}) { paddingValues ->
         book(book)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail, favorite: Boolean, previusScreen: String?) {
+fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail, previusScreen: String?) {
     booksVM.isFavorite(b)
+    val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
+    val isToRead: Boolean by booksVM.isTR.observeAsState(false)
     val title = booksVM.bookGender
         /*if (booksVM.query.length == 15) booksVM.query.subSequence(7, booksVM.query.length-1)
         else "history"*/
@@ -189,18 +191,23 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
             }
         },
         actions = {
-            IconButton(onClick = { /*toDo*/ }) {
+            IconButton(onClick = {
+                if (!isToRead)
+                    booksVM.saveAsToRead(b)
+                else
+                    booksVM.deleteToRead(b)
+            }) {
                 Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
             }
             IconButton(onClick = {
-                if (!favorite)
+                if (!isFavorite)
                     booksVM.saveFavorite(b)
                 else
                     booksVM.deleteFavorite(b)
             }) {
                 Icon(
                     imageVector =
-                if (!favorite)
+                if (!isFavorite)
                     Icons.Filled.FavoriteBorder
                 else
                     Icons.Filled.Favorite,

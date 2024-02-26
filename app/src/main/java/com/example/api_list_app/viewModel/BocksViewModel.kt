@@ -25,13 +25,37 @@ class BocksViewModel: ViewModel() {
     private val _book = MutableLiveData<BookDetail>()
     val book = _book
 
-    //Database data
+    //Database favorites
     private val _loadingDB = MutableLiveData(true)
     val loadingDB = _loadingDB
     private val _isFavorite = MutableLiveData(false)
     val isFavorite = _isFavorite
     private val _favorites = MutableLiveData<MutableList<BookDetail>>()
     val favorites = _favorites
+
+    //Database toRead
+    private val _loadingTR = MutableLiveData(true)
+    val loadingTR = _loadingTR
+    private val _isTR = MutableLiveData(false)
+    val isTR = _isTR
+    private val _tr= MutableLiveData<MutableList<BookDetail>>()
+    val toRead = _tr
+
+    //Database reading
+    private val _loadingReading = MutableLiveData(true)
+    val loadingReading = _loadingReading
+    private val _isReading = MutableLiveData(false)
+    val isReading = _isReading
+    private val _Reading = MutableLiveData<MutableList<BookDetail>>()
+    val Reading = _Reading
+
+    //Database read
+    private val _loadingRead = MutableLiveData(true)
+    val loadingRead = _loadingRead
+    private val _isRead = MutableLiveData(false)
+    val isRead = _isRead
+    private val _read = MutableLiveData<MutableList<BookDetail>>()
+    val read = _read
 
     var expanded by mutableStateOf(false)
         private set
@@ -138,8 +162,8 @@ class BocksViewModel: ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = repository.getToRead()
             withContext(Dispatchers.Main) {
-                _favorites.value = response
-                _loadingDB.value = false
+                _tr.value = response
+                _loadingTR.value = false
             }
         }
     }

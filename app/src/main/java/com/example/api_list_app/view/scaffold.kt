@@ -42,6 +42,7 @@ import com.example.api_list_app.viewModel.BocksViewModel
 fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScreen: String, title: CharSequence) {
     val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
     val favorites: MutableList<BookDetail> by booksVM.favorites.observeAsState(mutableListOf())
+    val toRead: MutableList<BookDetail> by booksVM.toRead.observeAsState(mutableListOf())
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Favorite,
         BottomNavigationScreens.Home,
@@ -53,15 +54,23 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScre
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            if (actualScreen.equals("favoriteScreen"))
-                items(favorites) { book ->
-                    BookItem(navController, book, booksVM, actualScreen)
+            when (actualScreen) {
+                "favoriteScreen" -> {
+                    items(favorites) { book ->
+                        BookItem(navController, book, booksVM, actualScreen)
+                    }
                 }
-            else
-                items(books.books) { book ->
-                    BookItem(navController, book, booksVM, actualScreen)
+                "listScreen" -> {
+                    items(books.books) { book ->
+                        BookItem(navController, book, booksVM, actualScreen)
+                    }
                 }
-
+                else -> {
+                    items(toRead) {book ->
+                        BookItem(navController, book, booksVM, actualScreen)
+                    }
+                }
+            }
         }
     }
 }

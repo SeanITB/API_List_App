@@ -21,6 +21,7 @@ import com.example.api_list_app.ui.theme.API_List_AppTheme
 import com.example.api_list_app.view.DetailScreen
 import com.example.api_list_app.view.FavoriteScreen
 import com.example.api_list_app.view.HomeScreen
+import com.example.api_list_app.view.LiberiScreen
 import com.example.api_list_app.view.LunchScreen
 import com.example.api_list_app.view.MyRecyclerBooksView
 import com.example.api_list_app.viewModel.BocksViewModel
@@ -88,6 +89,7 @@ class MainActivity : ComponentActivity() {
                                 backStackEntry.arguments?.getString("lastScreen")
                             ) }
                         composable(Routes.FavoriteScreen.route) { FavoriteScreen(navController, booksVM) }
+                        composable(Routes.LiberiScreen.route) { LiberiScreen(navController, booksVM) }
                     }
                 }
             }
