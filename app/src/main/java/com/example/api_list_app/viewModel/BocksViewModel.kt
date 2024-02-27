@@ -30,8 +30,8 @@ class BocksViewModel: ViewModel() {
     val searchBooks = _searchBooks
     private val _searchText = MutableLiveData("")
     val searchText = _searchText
-    //private val _isSearching = MutableLiveData(false)
-    //val isSearching = _isSearching
+    private val _isSearching = MutableLiveData(false)
+    val isSearching = _isSearching
 
     //Database favorites
     private val _loadingDB = MutableLiveData(true)
@@ -101,7 +101,9 @@ class BocksViewModel: ViewModel() {
         //this._isSearching.value = true
     }
 
-
+    fun changeIsSearching(value: Boolean) {
+        this._isSearching.value = value
+    }
 
     fun changeIdBook(value: String) {
         this.idBook = value

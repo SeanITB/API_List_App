@@ -84,7 +84,7 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScre
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel, title: CharSequence, actualScreen: String) {
-    val search = MySearchBar(navController, booksVM, actualScreen)
+    val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
     TopAppBar(
         title = { Text(text = "$title books" ) },
         colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -92,7 +92,10 @@ fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel, title
             titleContentColor = MaterialTheme.colorScheme.background
         ),
         actions = {
-            IconButton(onClick = { search }) {
+            IconButton(onClick = {
+                booksVM.changeIsSearching(true)
+                navController.navigate(Routes.ListScreen.createRouteToList(actualScreen))
+            }) {
                 Icon(imageVector = Icons.Filled.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
             }
             IconButton(onClick = { /*toDo*/ }) {
@@ -100,6 +103,7 @@ fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel, title
             }
         }
     )
+    if (isSearch) MySearchBar(navController, booksVM, actualScreen)
 }
 
 @Composable
