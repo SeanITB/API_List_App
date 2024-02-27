@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,6 +36,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -83,22 +85,28 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel, actual
         topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM, title = title, actualScreen = actualScreen)},
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
-        Column {
-            Spacer(modifier = Modifier.height(100.dp))
-            Text(text = "Welcom to the best Libery App")
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(90.dp))
+            Text(text = "Welcom to the best Libery App", fontWeight = FontWeight.Bold/*, fontSize = 40.dp*/)
+            Spacer(modifier = Modifier.height(10.dp))
             SerchGenger(navController, booksVM)
+            Box(modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .fillMaxHeight(0.8f)) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    content = {
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                content = {
-
-                    items(books.books) { book ->
-                        BookItemHome(navController, book, booksVM, actualScreen)
+                        items(books.books) { book ->
+                            BookItemHome(navController, book, booksVM, actualScreen)
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
@@ -109,12 +117,16 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel, actual
 fun SerchGenger(navController: NavController, booksVM: BocksViewModel) {
     val genders = arrayOf("Computer Science", "Science Mathematics", "Economics Finance", "Business Management", "Politics Government", "History", "Philosophy", "Kotlin", "Android")
     val actualScreen: String = "homeSreen"
-    Row {
+    Row (
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth(0.9f)
+    ) {
+        Spacer(modifier = Modifier.padding(16.dp))
         Text(text = "Book\nGender", fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.padding(16.dp))
         Box(
             //contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxWidth(0.95f)
+            modifier = Modifier.fillMaxWidth(0.75f)
         ) {
             OutlinedTextField(
                 value = booksVM.bookGender,
@@ -147,13 +159,13 @@ fun SerchGenger(navController: NavController, booksVM: BocksViewModel) {
                     )
                 }
             }
-            Button(
-                onClick = {
-                    navController.navigate(Routes.ListScreen.createRouteToList(actualScreen))
-                }
-            ) {
-                Icon(imageVector = Icons.Filled.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
+        }
+        Button(
+            onClick = {
+                navController.navigate(Routes.ListScreen.createRouteToList(actualScreen))
             }
+        ) {
+            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
         }
     }
 }
