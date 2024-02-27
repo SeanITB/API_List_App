@@ -30,8 +30,8 @@ class BocksViewModel: ViewModel() {
     val searchBooks = _searchBooks
     private val _searchText = MutableLiveData("")
     val searchText = _searchText
-    private val _isSearching = MutableLiveData(false)
-    val isSearching = _isSearching
+    //private val _isSearching = MutableLiveData(false)
+    //val isSearching = _isSearching
 
     //Database favorites
     private val _loadingDB = MutableLiveData(true)
@@ -96,14 +96,12 @@ class BocksViewModel: ViewModel() {
 
     fun onSearchTextChange(value: String) {
         this._searchText.value = value
-    }
-
-
-    fun search() {
-        this._searchBooks.value = this.books.value?.copy()
+        //this._searchBooks.value = this.books.value?.copy()
         this._searchBooks.value?.books?.filter { it.title.contains(this.searchText.toString(), true)  }
-        this._isSearching.value = true
+        //this._isSearching.value = true
     }
+
+
 
     fun changeIdBook(value: String) {
         this.idBook = value
@@ -119,6 +117,7 @@ class BocksViewModel: ViewModel() {
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
                     _books.value = response.body()
+                    _searchBooks.value = _books.value
                     _loadingApi.value = false
                 }
                 else {

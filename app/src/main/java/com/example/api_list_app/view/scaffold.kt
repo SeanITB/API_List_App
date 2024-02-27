@@ -133,12 +133,7 @@ fun MySearchBar(navController: NavController, booksVM: BocksViewModel, actualScr
         onQueryChange = { booksVM.onSearchTextChange(it) },
         onSearch = { booksVM.onSearchTextChange(it) },
         active = true,
-        leadingIcon = { Button(onClick = {
-            booksVM.search()
-            navController.navigate(Routes.ListScreen.createRouteToList(actualScreen))
-        }) {
-            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")}
-        },
+        leadingIcon = { Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")},
         trailingIcon = {},
         placeholder = { Text("What are you looking for?")},
         onActiveChange = {},
