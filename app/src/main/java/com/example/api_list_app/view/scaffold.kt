@@ -2,31 +2,31 @@ package com.example.api_list_app.view
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -43,6 +43,7 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScre
     val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
     val favorites: MutableList<BookDetail> by booksVM.favorites.observeAsState(mutableListOf())
     val toRead: MutableList<BookDetail> by booksVM.toRead.observeAsState(mutableListOf())
+    val searchBooks: Data by booksVM.searchBooks.observeAsState(Data(emptyList(), "", 0))
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Favorite,
         BottomNavigationScreens.Home,
@@ -50,7 +51,7 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScre
     )
 
     Scaffold (
-        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM, title = title)},
+        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM, title = title, actualScreen = actualScreen)},
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -65,6 +66,11 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScre
                         BookItem(navController, book, booksVM, actualScreen)
                     }
                 }
+                "search" -> {
+                    items(searchBooks.books) {book ->
+                        BookItem(navController = navController, book = book, booksVM = booksVM, actualSreen = actualScreen)
+                    }
+                }
                 else -> {
                     items(toRead) {book ->
                         BookItem(navController, book, booksVM, actualScreen)
@@ -77,23 +83,16 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScre
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel, title: CharSequence) {
+fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel, title: CharSequence, actualScreen: String) {
+    val search = MySearchBar(navController, booksVM, actualScreen)
     TopAppBar(
         title = { Text(text = "$title books" ) },
         colors = TopAppBarDefaults.largeTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.background
         ),
-        /*
-        navigationIcon = {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.background)
-            }
-        },
-
-         */
         actions = {
-            IconButton(onClick = { /*toDo*/ }) {
+            IconButton(onClick = { search }) {
                 Icon(imageVector = Icons.Filled.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
             }
             IconButton(onClick = { /*toDo*/ }) {
@@ -123,6 +122,30 @@ fun MyBottomBar(navController: NavController, bottomNavItems:  List<BottomNaviga
             )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MySearchBar(navController: NavController, booksVM: BocksViewModel, actualScreen: String) {
+    val serchText by booksVM.searchText.observeAsState("")
+    SearchBar(
+        query = serchText,
+        onQueryChange = { booksVM.onSearchTextChange(it) },
+        onSearch = { booksVM.onSearchTextChange(it) },
+        active = true,
+        leadingIcon = { Button(onClick = {
+            booksVM.search()
+            navController.navigate(Routes.ListScreen.createRouteToList(actualScreen))
+        }) {
+            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")}
+        },
+        trailingIcon = {},
+        placeholder = { Text("What are you looking for?")},
+        onActiveChange = {},
+        modifier = Modifier
+            .fillMaxHeight(0.1f)
+            .clip(CircleShape),
+    ){}
 }
 
 

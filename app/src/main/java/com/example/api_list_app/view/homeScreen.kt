@@ -80,7 +80,7 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel, actual
     val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
     //val body = bodyHomeScreen(navController = navController, booksVM = booksVM, actualScreen = actualScreen)
     Scaffold (
-        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM, title = title)},
+        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM, title = title, actualScreen = actualScreen)},
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
         Column {
@@ -110,10 +110,7 @@ fun SerchGenger(navController: NavController, booksVM: BocksViewModel) {
     val genders = arrayOf("Computer Science", "Science Mathematics", "Economics Finance", "Business Management", "Politics Government", "History", "Philosophy", "Kotlin", "Android")
     val actualScreen: String = "homeSreen"
     Row {
-        Text(text = """
-                    Book
-                    Gender
-                """.trimIndent(), fontWeight = FontWeight.Bold)
+        Text(text = "Book\nGender", fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.padding(16.dp))
         Box(
             //contentAlignment = Alignment.Center,

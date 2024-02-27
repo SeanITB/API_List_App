@@ -32,8 +32,9 @@ import com.example.api_list_app.viewModel.BocksViewModel
 @Composable
 fun FavoriteScreen(navController: NavController, booksVM: BocksViewModel) {
     booksVM.getFavorites()
-    val actualScreen = "favoriteScreen"
     val showLoding: Boolean by booksVM.loadingDB.observeAsState(true)
+    val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
+    val actualScreen = if (isSearch) "search" else "favoriteScreen"
     val title = "Favorite"
     if (showLoding) {
         CircularProgressIndicator(

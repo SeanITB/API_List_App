@@ -25,6 +25,14 @@ class BocksViewModel: ViewModel() {
     private val _book = MutableLiveData<BookDetail>()
     val book = _book
 
+    // Search text
+    private val _searchBooks = MutableLiveData<Data>()
+    val searchBooks = _searchBooks
+    private val _searchText = MutableLiveData("")
+    val searchText = _searchText
+    private val _isSearching = MutableLiveData(false)
+    val isSearching = _isSearching
+
     //Database favorites
     private val _loadingDB = MutableLiveData(true)
     val loadingDB = _loadingDB
@@ -86,6 +94,17 @@ class BocksViewModel: ViewModel() {
         }
     }
 
+    fun onSearchTextChange(value: String) {
+        this._searchText.value = value
+    }
+
+
+    fun search() {
+        this._searchBooks.value = this.books.value?.copy()
+        this._searchBooks.value?.books?.filter { it.title.contains(this.searchText.toString(), true)  }
+        this._isSearching.value = true
+    }
+
     fun changeIdBook(value: String) {
         this.idBook = value
     }
@@ -108,7 +127,6 @@ class BocksViewModel: ViewModel() {
             }
         }
     }
-
 
     fun getBook(gender: String, id: String){
         CoroutineScope(Dispatchers.IO).launch {

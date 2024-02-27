@@ -170,8 +170,6 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
     val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
     val isToRead: Boolean by booksVM.isTR.observeAsState(false)
     val title = booksVM.bookGender
-        /*if (booksVM.query.length == 15) booksVM.query.subSequence(7, booksVM.query.length-1)
-        else "history"*/
     val root = when(previusScreen) {
         "listScreen" -> Routes.ListScreen.route
         else -> Routes.FavoriteScreen.route
@@ -191,27 +189,11 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
             }
         },
         actions = {
-            IconButton(onClick = {
-                if (!isToRead)
-                    booksVM.saveAsToRead(b)
-                else
-                    booksVM.deleteToRead(b)
-            }) {
+            IconButton(onClick = { if (!isToRead) booksVM.saveAsToRead(b) else booksVM.deleteToRead(b) }) {
                 Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
             }
-            IconButton(onClick = {
-                if (!isFavorite)
-                    booksVM.saveFavorite(b)
-                else
-                    booksVM.deleteFavorite(b)
-            }) {
-                Icon(
-                    imageVector =
-                if (!isFavorite)
-                    Icons.Filled.FavoriteBorder
-                else
-                    Icons.Filled.Favorite,
-                    contentDescription = "Favorite", tint = MaterialTheme.colorScheme.background)
+            IconButton(onClick = { if (!isFavorite) booksVM.saveFavorite(b) else booksVM.deleteFavorite(b) }) {
+                Icon(imageVector = if (!isFavorite) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite, contentDescription = "Favorite", tint = MaterialTheme.colorScheme.background)
             }
         }
     )
