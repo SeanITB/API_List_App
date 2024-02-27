@@ -158,22 +158,19 @@ fun book (b: BookDetail) {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel, previusScreen: String?) {
-    Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM, b = book, previusScreen = previusScreen)}) { paddingValues ->
+    Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM, b = book, )}) { paddingValues ->
         book(book)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail, previusScreen: String?) {
+fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail) {
     booksVM.isFavorite(b)
     val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
     val isToRead: Boolean by booksVM.isTR.observeAsState(false)
     val title = booksVM.bookGender
-    val root = when(previusScreen) {
-        "listScreen" -> Routes.ListScreen.route
-        else -> Routes.FavoriteScreen.route
-    }
+
     TopAppBar(
         title = { Text(text = "$title books" ) },
         colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -183,7 +180,7 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
         navigationIcon = {
             IconButton(onClick = {
                 navController.navigate(
-                    root
+                    booksVM.getRout()
                 ) }) {
                 Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.background)
             }

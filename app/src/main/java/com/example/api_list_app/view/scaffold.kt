@@ -51,7 +51,7 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScre
     )
 
     Scaffold (
-        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM, title = title, actualScreen = actualScreen)},
+        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM)},
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -83,10 +83,10 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScre
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel, title: CharSequence, actualScreen: String) {
+fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel) {
     val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
     TopAppBar(
-        title = { Text(text = "$title books" ) },
+        title = { Text(text = booksVM.title ) },
         colors = TopAppBarDefaults.largeTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.background
@@ -94,7 +94,7 @@ fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel, title
         actions = {
             IconButton(onClick = {
                 booksVM.changeIsSearching(true)
-                navController.navigate(Routes.ListScreen.createRouteToList(actualScreen))
+                navController.navigate(Routes.ListScreen.route)
             }) {
                 Icon(imageVector = Icons.Filled.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
             }
@@ -103,7 +103,7 @@ fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel, title
             }
         }
     )
-    if (isSearch) MySearchBar(navController, booksVM, actualScreen)
+    if (isSearch) MySearchBar(navController, booksVM)
 }
 
 @Composable
@@ -130,7 +130,7 @@ fun MyBottomBar(navController: NavController, bottomNavItems:  List<BottomNaviga
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MySearchBar(navController: NavController, booksVM: BocksViewModel, actualScreen: String) {
+fun MySearchBar(navController: NavController, booksVM: BocksViewModel) {
     val serchText by booksVM.searchText.observeAsState("")
     SearchBar(
         query = serchText,

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.example.api_list_app.api.Repository
 import com.example.api_list_app.model.BookDetail
 import com.example.api_list_app.model.Data
+import com.example.api_list_app.navigation.Routes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -65,6 +66,12 @@ class BocksViewModel: ViewModel() {
     private val _read = MutableLiveData<MutableList<BookDetail>>()
     val read = _read
 
+    var actualScreen by mutableStateOf("homeScreen")
+        private set
+
+    var title by mutableStateOf("homeScreen")
+        private set
+
     var expanded by mutableStateOf(false)
         private set
 
@@ -111,6 +118,22 @@ class BocksViewModel: ViewModel() {
 
     fun changeExpanded (value: Boolean) {
         this.expanded = value
+    }
+
+    fun changeActualScreen(value: String) {
+        this.actualScreen = value
+    }
+
+    fun changeTitele(value: String) {
+        this.actualScreen = value
+    }
+
+    fun getRout(): String {
+        return  when(this.actualScreen) {
+            "listScreen", "search"  -> Routes.ListScreen.route
+            "homeScreen" -> Routes.HomeScreen.route
+            else -> Routes.FavoriteScreen.route
+        }
     }
 
     fun getBooks(gender: String){

@@ -55,7 +55,7 @@ import com.example.api_list_app.viewModel.BocksViewModel
 @Composable
 fun HomeScreen(navController: NavController, booksVM: BocksViewModel) {
     booksVM.getBooks(booksVM.bookGender)
-    val actualScreen: String = "homeScreen"
+    booksVM.changeActualScreen("homeScreen")
     val showLoding: Boolean by booksVM.loadingApi.observeAsState(true)
     val title = "Home"
 
@@ -66,14 +66,14 @@ fun HomeScreen(navController: NavController, booksVM: BocksViewModel) {
         )
     }
     else {
-        MyScaffoldHome(navController,  booksVM, actualScreen, title)
+        MyScaffoldHome(navController, booksVM)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel, actualScreen: String, title: CharSequence) {
+fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Favorite,
         BottomNavigationScreens.Home,
@@ -82,16 +82,18 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel, actual
     val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
     //val body = bodyHomeScreen(navController = navController, booksVM = booksVM, actualScreen = actualScreen)
     Scaffold (
-        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM, title = title, actualScreen = actualScreen)},
+        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM)},
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Spacer(modifier = Modifier.height(90.dp))
             Text(text = "Welcom to the best Libery App", fontWeight = FontWeight.Bold/*, fontSize = 40.dp*/)
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             SerchGenger(navController, booksVM)
+            Spacer(modifier = Modifier.height(20.dp))
             Box(modifier = Modifier
                 .fillMaxWidth(0.8f)
                 .fillMaxHeight(0.8f)) {
@@ -100,9 +102,8 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel, actual
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                     content = {
-
                         items(books.books) { book ->
-                            BookItemHome(navController, book, booksVM, actualScreen)
+                            BookItemHome(navController, book, booksVM)
                         }
                     }
                 )
@@ -177,7 +178,7 @@ fun SerchGenger(navController: NavController, booksVM: BocksViewModel) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun BookItemHome(navController: NavController, book: Book, booksVM: BocksViewModel, actualSreen: String) {
+fun BookItemHome(navController: NavController, book: Book, booksVM: BocksViewModel) {
     val textMarginHeight : Int = 10
     Card(
         border = BorderStroke(2.dp, Color.LightGray),
@@ -191,7 +192,7 @@ fun BookItemHome(navController: NavController, book: Book, booksVM: BocksViewMod
                 .clickable(/*enabled = false*/) {
                     booksVM.changeIdBook(book.id)
                     booksVM.changeGender("book/")
-                    navController.navigate(Routes.DetailScreen.createRouteToDetail(actualSreen))
+                    navController.navigate(Routes.DetailScreen.route)
                 }
         ) {
             GlideImage(
