@@ -111,6 +111,26 @@ class BocksViewModel: ViewModel() {
         //this._isSearching.value = true
     }
 
+    fun onSearchFavoritesTextChange(value: String) {
+        searchBooks = booksOriginal.books
+        println("text: "+value)
+        this._searchText.value = value
+        this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
+        println("Lista: "+searchBooks?.size)
+        _books.value = Data(searchBooks, books.value!!.status, books.value!!.total)
+        //this._isSearching.value = true
+    }
+
+    fun onSearchToReadTextChange(value: String) {
+        searchBooks = booksOriginal.books
+        println("text: "+value)
+        this._searchText.value = value
+        this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
+        println("Lista: "+searchBooks?.size)
+        _books.value = Data(searchBooks, books.value!!.status, books.value!!.total)
+        //this._isSearching.value = true
+    }
+
     fun changeIsSearching(value: Boolean) {
         this._isSearching.value = value
     }
