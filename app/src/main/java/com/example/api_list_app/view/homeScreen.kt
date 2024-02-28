@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.GolfCourse
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -117,7 +118,7 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
 @Composable
 fun SerchGenger(navController: NavController, booksVM: BocksViewModel) {
     val genders = arrayOf("Computer Science", "Science Mathematics", "Economics Finance", "Business Management", "Politics Government", "History", "Philosophy", "Kotlin", "Android")
-    val actualScreen: String = "homeSreen"
+    booksVM.changeActualScreen("homeSreen")
     Row (
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth(0.9f)
@@ -163,10 +164,10 @@ fun SerchGenger(navController: NavController, booksVM: BocksViewModel) {
         }
         Button(
             onClick = {
-                navController.navigate(Routes.ListScreen.createRouteToList(actualScreen))
+                navController.navigate(Routes.ListScreen.route)
             }
         ) {
-            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
+            Icon(imageVector = Icons.Filled.GolfCourse, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
         }
     }
 }

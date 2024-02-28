@@ -34,15 +34,15 @@ fun FavoriteScreen(navController: NavController, booksVM: BocksViewModel) {
     booksVM.getFavorites()
     val showLoding: Boolean by booksVM.loadingDB.observeAsState(true)
     //val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
-    val actualScreen = /*if (isSearch) "search" else */"favoriteScreen"
-    val title = "Favorite"
+    booksVM.changeActualScreen("favoriteScreen")
+    booksVM.changeTitele("Favorite")
     if (showLoding) {
         CircularProgressIndicator(
             modifier = Modifier.width(64.dp),
             color = MaterialTheme.colorScheme.primary
         )
     } else {
-        MyScaffold(navController, booksVM, actualScreen, title)
+        MyScaffold(navController, booksVM)
     }
 }
 

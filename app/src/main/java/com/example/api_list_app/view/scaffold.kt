@@ -43,7 +43,7 @@ import com.example.api_list_app.viewModel.BocksViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScreen: String, title: CharSequence) {
+fun MyScaffold(navController: NavController, booksVM: BocksViewModel) {
     val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
     val favorites: MutableList<BookDetail> by booksVM.favorites.observeAsState(mutableListOf())
     val toRead: MutableList<BookDetail> by booksVM.toRead.observeAsState(mutableListOf())
@@ -59,8 +59,7 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScre
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-
-            when (actualScreen) {
+            when (booksVM.actualScreen) {
                 "favoriteScreen" -> {
                     items(favorites) { book ->
                         println("fav")
@@ -121,7 +120,7 @@ fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel) {
         actions = {
             IconButton(onClick = {
                 booksVM.changeIsSearching(true)
-                navController.navigate(Routes.ListScreen.route)
+                //navController.navigate(Routes.ListScreen.route)
             }) {
                 Icon(imageVector = Icons.Filled.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
             }

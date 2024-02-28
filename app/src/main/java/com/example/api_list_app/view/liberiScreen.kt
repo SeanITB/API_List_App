@@ -15,8 +15,8 @@ import com.example.api_list_app.viewModel.BocksViewModel
 @Composable
 fun LiberiScreen(navController: NavController, booksVM: BocksViewModel) {
     val showLoding: Boolean by booksVM.loadingTR.observeAsState(true)
-    val actualSreen: String = "liberiScreen"
-    val title: String = "LIBERI"
+    booksVM.changeActualScreen("liberiScreen")
+    booksVM.changeTitele("LIBERI")
     booksVM.getToRead()
     if (showLoding) {
         CircularProgressIndicator(
@@ -24,7 +24,7 @@ fun LiberiScreen(navController: NavController, booksVM: BocksViewModel) {
             color = MaterialTheme.colorScheme.primary
         )
     } else {
-        MyScaffold(navController = navController, booksVM = booksVM, actualScreen = actualSreen, title = title )
+        MyScaffold(navController = navController, booksVM = booksVM)
     }
     
 
