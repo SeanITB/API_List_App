@@ -46,9 +46,8 @@ import com.example.api_list_app.viewModel.BocksViewModel
 @Composable
 fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusScreen: String?) {
     booksVM.getBook(booksVM.bookGender, booksVM.idBook)
-    val b: BookDetail by booksVM.book.observeAsState(BookDetail("", "","","","", "", "", "", "", "", "", ""))
-
     booksVM.getFavorites()
+    val b: BookDetail by booksVM.book.observeAsState(BookDetail("", "","","","", "", "", "", "", "", "", ""))
     MyScaffold(navController = navController, book = b, booksVM = booksVM, previusScreen = previusScreen)
 }
 
@@ -166,7 +165,8 @@ fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksVie
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail) {
-    booksVM.isFavorite(b)
+    val book = booksVM.getBookById(b.id)
+    booksVM.isFavorite(book)
     val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
     val isToRead: Boolean by booksVM.isTR.observeAsState(false)
     val title = booksVM.bookGender
@@ -186,10 +186,10 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
             }
         },
         actions = {
-            IconButton(onClick = { if (!isToRead) booksVM.saveAsToRead(b) else booksVM.deleteToRead(b) }) {
+            IconButton(onClick = { if (!isToRead) booksVM.saveAsToRead(book) else booksVM.deleteToRead(book) }) {
                 Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
             }
-            IconButton(onClick = { if (!isFavorite) booksVM.saveFavorite(b) else booksVM.deleteFavorite(b) }) {
+            IconButton(onClick = { if (!isFavorite) booksVM.saveFavorite(book) else booksVM.deleteFavorite(book) }) {
                 Icon(imageVector = if (!isFavorite) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite, contentDescription = "Favorite", tint = MaterialTheme.colorScheme.background)
             }
         }

@@ -40,7 +40,7 @@ class BocksViewModel: ViewModel() {
     val loadingDB = _loadingDB
     private val _isFavorite = MutableLiveData(false)
     val isFavorite = _isFavorite
-    private val _favorites = MutableLiveData<MutableList<BookDetail>>()
+    private val _favorites = MutableLiveData<List<Book>>()
     val favorites = _favorites
 
     //Database toRead
@@ -48,7 +48,7 @@ class BocksViewModel: ViewModel() {
     val loadingTR = _loadingTR
     private val _isTR = MutableLiveData(false)
     val isTR = _isTR
-    private val _tr= MutableLiveData<MutableList<BookDetail>>()
+    private val _tr= MutableLiveData<List<Book>>()
     val toRead = _tr
 
     //Database reading
@@ -56,7 +56,7 @@ class BocksViewModel: ViewModel() {
     val loadingReading = _loadingReading
     private val _isReading = MutableLiveData(false)
     val isReading = _isReading
-    private val _Reading = MutableLiveData<MutableList<BookDetail>>()
+    private val _Reading = MutableLiveData<List<BookDetail>>()
     val Reading = _Reading
 
     //Database read
@@ -64,7 +64,7 @@ class BocksViewModel: ViewModel() {
     val loadingRead = _loadingRead
     private val _isRead = MutableLiveData(false)
     val isRead = _isRead
-    private val _read = MutableLiveData<MutableList<BookDetail>>()
+    private val _read = MutableLiveData<List<BookDetail>>()
     val read = _read
 
     var actualScreen by mutableStateOf("homeScreen")
@@ -163,6 +163,11 @@ class BocksViewModel: ViewModel() {
         return this.searchBooks
     }
 
+    fun getBookById(i: String): Book {
+        val result = books.value!!.books.filter { it.id == i } // filtrar per id
+        return result[0] //because the result is a list with only a element
+    }
+
     fun getBooks(gender: String){
         CoroutineScope(Dispatchers.IO).launch {
             val response = repository.getGender(gender)
@@ -204,23 +209,23 @@ class BocksViewModel: ViewModel() {
         }
     }
 
-    fun isFavorite(bookDetail: BookDetail) {
+    fun isFavorite(b: Book) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = repository.isFavorite(bookDetail)
+            val response = repository.isFavorite(b)
             withContext(Dispatchers.Main) {
                 _isFavorite.value = response
             }
         }
     }
 
-    fun saveFavorite(b: BookDetail) {
+    fun saveFavorite(b: Book) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.saveAsFavorite(b)
             _isFavorite.postValue(true)
         }
     }
 
-    fun deleteFavorite(b: BookDetail) {
+    fun deleteFavorite(b: Book) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.deleteFavorite(b)
             _isFavorite.postValue(false)
@@ -237,23 +242,23 @@ class BocksViewModel: ViewModel() {
         }
     }
 
-    fun isToRead(bookDetail: BookDetail) {
+    fun isToRead(Book: Book) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = repository.isToRead(bookDetail)
+            val response = repository.isToRead(Book)
             withContext(Dispatchers.Main) {
                 _isFavorite.value = response
             }
         }
     }
 
-    fun saveAsToRead(b: BookDetail) {
+    fun saveAsToRead(b: Book) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.saveAsToRead(b)
             _isFavorite.postValue(true)
         }
     }
 
-    fun deleteToRead(b: BookDetail) {
+    fun deleteToRead(b: Book) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.deleteToRead(b)
             _isFavorite.postValue(false)
@@ -270,23 +275,23 @@ class BocksViewModel: ViewModel() {
         }
     }
 
-    fun isReading(bookDetail: BookDetail) {
+    fun isReading(Book: Book) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = repository.isReading(bookDetail)
+            val response = repository.isReading(Book)
             withContext(Dispatchers.Main) {
                 _isFavorite.value = response
             }
         }
     }
 
-    fun saveAsReading(b: BookDetail) {
+    fun saveAsReading(b: Book) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.saveAsReading(b)
             _isFavorite.postValue(true)
         }
     }
 
-    fun deleteReading(b: BookDetail) {
+    fun deleteReading(b: Book) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.deleteReading(b)
             _isFavorite.postValue(false)
@@ -303,23 +308,23 @@ class BocksViewModel: ViewModel() {
         }
     }
 
-    fun isRead(bookDetail: BookDetail) {
+    fun isRead(Book: Book) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = repository.isRead(bookDetail)
+            val response = repository.isRead(Book)
             withContext(Dispatchers.Main) {
                 _isFavorite.value = response
             }
         }
     }
 
-    fun saveAsRead(b: BookDetail) {
+    fun saveAsRead(b: Book) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.saveAsRead(b)
             _isFavorite.postValue(true)
         }
     }
 
-    fun deleteRead(b: BookDetail) {
+    fun deleteRead(b: Book) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.deleteRead(b)
             _isFavorite.postValue(false)
