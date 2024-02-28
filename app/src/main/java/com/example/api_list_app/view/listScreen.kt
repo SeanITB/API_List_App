@@ -51,7 +51,7 @@ fun MyRecyclerBooksView(navController: NavController, booksVM: BocksViewModel, l
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel, actualSreen: String) {
+fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel) {
     val textMarginHeight : Int = 10
     Card(
         border = BorderStroke(2.dp, Color.LightGray),
@@ -65,7 +65,7 @@ fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel, 
                 .clickable(/*enabled = false*/) {
                     booksVM.changeIdBook(book.id)
                     booksVM.changeGender("book/")
-                    navController.navigate(Routes.DetailScreen.createRouteToDetail(actualSreen))
+                    navController.navigate(Routes.DetailScreen.route)
                 }
         ) {
             GlideImage(

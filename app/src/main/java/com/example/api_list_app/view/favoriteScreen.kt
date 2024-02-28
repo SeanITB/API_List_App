@@ -48,7 +48,7 @@ fun FavoriteScreen(navController: NavController, booksVM: BocksViewModel) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun BookItem(navController: NavController, favoriteBook: BookDetail, booksVM: BocksViewModel, actualScreen: String?) {
+fun BookItem(navController: NavController, favoriteBook: BookDetail, booksVM: BocksViewModel) {
     val textMarginHeight : Int = 10
     Card(
         border = BorderStroke(2.dp, Color.LightGray),
@@ -62,7 +62,7 @@ fun BookItem(navController: NavController, favoriteBook: BookDetail, booksVM: Bo
                 .clickable(/*enabled = false*/) {
                     booksVM.changeIdBook(favoriteBook.id)
                     booksVM.changeGender("book/")
-                    navController.navigate(Routes.DetailScreen.createRouteToDetail(actualScreen))
+                    navController.navigate(Routes.DetailScreen.route)
                 }
         ) {
             GlideImage(

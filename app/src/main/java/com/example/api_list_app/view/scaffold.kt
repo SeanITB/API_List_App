@@ -1,6 +1,7 @@
 package com.example.api_list_app.view
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,6 +10,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DesignServices
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
@@ -30,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.api_list_app.model.Book
 import com.example.api_list_app.model.BookDetail
 import com.example.api_list_app.model.Data
 import com.example.api_list_app.navigation.BottomNavigationScreens
@@ -43,7 +47,7 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScre
     val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
     val favorites: MutableList<BookDetail> by booksVM.favorites.observeAsState(mutableListOf())
     val toRead: MutableList<BookDetail> by booksVM.toRead.observeAsState(mutableListOf())
-    val searchBooks: Data by booksVM.searchBooks.observeAsState(Data(emptyList(), "", 0))
+    //val searchBooks: List<Book> = booksVM.getSearchBooks()
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Favorite,
         BottomNavigationScreens.Home,
@@ -55,28 +59,51 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel, actualScre
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+
             when (actualScreen) {
                 "favoriteScreen" -> {
                     items(favorites) { book ->
-                        BookItem(navController, book, booksVM, actualScreen)
+                        println("fav")
+                        BookItem(navController, book, booksVM )
                     }
                 }
-                "listScreen" -> {
+                "listScreen", "search" -> {
                     items(books.books) { book ->
-                        BookItem(navController, book, booksVM, actualScreen)
+                        println("listScreen")
+                        BookItem(navController, book, booksVM)
                     }
                 }
+                /*
                 "search" -> {
-                    items(searchBooks.books) {book ->
-                        BookItem(navController = navController, book = book, booksVM = booksVM, actualSreen = actualScreen)
+                    println("He entrado")
+                    items(searchBooks) {book ->
+                        println("libro")
+                        BookItem(navController = navController, book = book, booksVM = booksVM)
                     }
                 }
+
+                 */
                 else -> {
                     items(toRead) {book ->
-                        BookItem(navController, book, booksVM, actualScreen)
+                        BookItem(navController, book, booksVM)
                     }
                 }
             }
+
+            /*
+            items(
+                when(actualScreen) {
+                    "favoriteScreen" -> favorites
+                    "listScreen" -> books.books
+                    "search" -> searchBooks
+                    else -> toRead
+                }
+            ) { book ->
+                println("fav")
+                BookItem(navController, book, booksVM)
+            }
+
+             */
         }
     }
 }
@@ -138,7 +165,7 @@ fun MySearchBar(navController: NavController, booksVM: BocksViewModel) {
         onSearch = { booksVM.onSearchTextChange(it) },
         active = true,
         leadingIcon = { Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")},
-        trailingIcon = {},
+        trailingIcon = { Icon(imageVector = Icons.Filled.Close, contentDescription = "Close search", modifier = Modifier.clickable { booksVM.changeIsSearching(false) })},
         placeholder = { Text("What are you looking for?")},
         onActiveChange = {},
         modifier = Modifier

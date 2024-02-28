@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.api_list_app.api.Repository
+import com.example.api_list_app.model.Book
 import com.example.api_list_app.model.BookDetail
 import com.example.api_list_app.model.Data
 import com.example.api_list_app.navigation.Routes
@@ -23,12 +24,12 @@ class BocksViewModel: ViewModel() {
     val loadingApi = _loadingApi
     private val _books = MutableLiveData<Data>()
     val books = _books
+    var booksOriginal = Data(emptyList(), "", 0)
     private val _book = MutableLiveData<BookDetail>()
     val book = _book
 
     // Search text
-    private val _searchBooks = MutableLiveData<Data>()
-    val searchBooks = _searchBooks
+    private var searchBooks : List<Book> = emptyList()
     private val _searchText = MutableLiveData("")
     val searchText = _searchText
     private val _isSearching = MutableLiveData(false)
@@ -86,7 +87,6 @@ class BocksViewModel: ViewModel() {
     var idBook by mutableStateOf("3319546813")
         private set
 
-
     fun changeGender(value: String) {
         this.bookGender = when(value) {
             "Computer Science" -> "computer+science"
@@ -102,9 +102,12 @@ class BocksViewModel: ViewModel() {
     }
 
     fun onSearchTextChange(value: String) {
+        searchBooks = booksOriginal.books
+        println("text: "+value)
         this._searchText.value = value
-        //this._searchBooks.value = this.books.value?.copy()
-        this._searchBooks.value?.books?.filter { it.title.contains(this.searchText.toString(), true)  }
+        this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
+        println("Lista: "+searchBooks?.size)
+        _books.value = Data(searchBooks, books.value!!.status, books.value!!.total)
         //this._isSearching.value = true
     }
 
@@ -136,13 +139,17 @@ class BocksViewModel: ViewModel() {
         }
     }
 
+    fun getSearchBooks(): List<Book> {
+        return this.searchBooks
+    }
+
     fun getBooks(gender: String){
         CoroutineScope(Dispatchers.IO).launch {
             val response = repository.getGender(gender)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
                     _books.value = response.body()
-                    _searchBooks.value = _books.value
+                    booksOriginal = books.value!!.copy()
                     _loadingApi.value = false
                 }
                 else {
