@@ -11,10 +11,8 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.DesignServices
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,10 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.api_list_app.model.Book
-import com.example.api_list_app.model.BookDetail
 import com.example.api_list_app.model.Data
 import com.example.api_list_app.navigation.BottomNavigationScreens
-import com.example.api_list_app.navigation.Routes
 import com.example.api_list_app.viewModel.BocksViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -162,8 +158,8 @@ fun MySearchBar(navController: NavController, booksVM: BocksViewModel) {
     val serchText by booksVM.searchText.observeAsState("")
     SearchBar(
         query = serchText,
-        onQueryChange = { booksVM.onSearchTextChange(it) },
-        onSearch = { booksVM.onSearchTextChange(it) },
+        onQueryChange = { booksVM.onSearchTextChangeList(it) },
+        onSearch = { booksVM.onSearchTextChangeList(it) },
         active = true,
         leadingIcon = { Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")},
         trailingIcon = { Icon(imageVector = Icons.Filled.Close, contentDescription = "Close search", modifier = Modifier.clickable { booksVM.changeIsSearching(false) })},

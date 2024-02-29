@@ -80,7 +80,7 @@ class BocksViewModel: ViewModel() {
         private set
 
     //var query by mutableStateOf("search/${this.bookGender}/")
-      //  private set
+    //  private set
 
     //var query = "search/history"
 
@@ -101,7 +101,7 @@ class BocksViewModel: ViewModel() {
         }
     }
 
-    fun onSearchTextChange(value: String) {
+    fun onSearchTextChangeList(value: String) {
         searchBooks = booksOriginal.books
         println("text: "+value)
         this._searchText.value = value
@@ -111,7 +111,7 @@ class BocksViewModel: ViewModel() {
         //this._isSearching.value = true
     }
 
-    fun onSearchFavoritesTextChange(value: String) {
+    fun onSearchTextChangeFavorites(value: String) {
         searchBooks = booksOriginal.books
         println("text: "+value)
         this._searchText.value = value
@@ -121,7 +121,17 @@ class BocksViewModel: ViewModel() {
         //this._isSearching.value = true
     }
 
-    fun onSearchToReadTextChange(value: String) {
+    fun onSearchTextChangeLiberi(value: String) {
+        searchBooks = booksOriginal.books
+        println("text: "+value)
+        this._searchText.value = value
+        this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
+        println("Lista: "+searchBooks?.size)
+        _books.value = Data(searchBooks, books.value!!.status, books.value!!.total)
+        //this._isSearching.value = true
+    }
+
+    fun onSearchTextChangeHome(value: String) {
         searchBooks = booksOriginal.books
         println("text: "+value)
         this._searchText.value = value
@@ -174,6 +184,7 @@ class BocksViewModel: ViewModel() {
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
                     _books.value = response.body()
+                    println("the books: "+_books.value?.books?.size)
                     booksOriginal = books.value!!.copy()
                     _loadingApi.value = false
                 }

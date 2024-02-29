@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.api_list_app.model.Book
 import com.example.api_list_app.model.BookDetail
 import com.example.api_list_app.navigation.Routes
 import com.example.api_list_app.viewModel.BocksViewModel
@@ -43,49 +44,6 @@ fun FavoriteScreen(navController: NavController, booksVM: BocksViewModel) {
         )
     } else {
         MyScaffold(navController, booksVM)
-    }
-}
-
-@OptIn(ExperimentalGlideComposeApi::class)
-@Composable
-fun BookItem(navController: NavController, favoriteBook: BookDetail, booksVM: BocksViewModel) {
-    val textMarginHeight : Int = 10
-    Card(
-        border = BorderStroke(2.dp, Color.LightGray),
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-                .clickable(/*enabled = false*/) {
-                    booksVM.changeIdBook(favoriteBook.id)
-                    booksVM.changeGender("book/")
-                    navController.navigate(Routes.DetailScreen.route)
-                }
-        ) {
-            GlideImage(
-                model = favoriteBook.image,
-                contentDescription = favoriteBook.id,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-            )
-            Spacer(modifier = Modifier.height(textMarginHeight.dp))
-            Text(
-                text = favoriteBook.title,
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxSize()
-            )
-            Spacer(modifier = Modifier.height(textMarginHeight.dp))
-            Text(
-                text = favoriteBook.authors,
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
     }
 }
 

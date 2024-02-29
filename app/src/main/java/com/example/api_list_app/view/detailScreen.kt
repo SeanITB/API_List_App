@@ -45,9 +45,13 @@ import com.example.api_list_app.viewModel.BocksViewModel
 
 @Composable
 fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusScreen: String?) {
+    println("im in")
     booksVM.getBook(booksVM.bookGender, booksVM.idBook)
     booksVM.getFavorites()
+    println("fav")
     val b: BookDetail by booksVM.book.observeAsState(BookDetail("", "","","","", "", "", "", "", "", "", ""))
+    println("info")
+    println(b.title)
     MyScaffold(navController = navController, book = b, booksVM = booksVM, previusScreen = previusScreen)
 }
 

@@ -65,6 +65,8 @@ fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel) 
                 .clickable(/*enabled = false*/) {
                     booksVM.changeIdBook(book.id)
                     booksVM.changeGender("book/")
+                    println("Goin in")
+                    println("the book titele: "+book.title)
                     navController.navigate(Routes.DetailScreen.route)
                 }
         ) {

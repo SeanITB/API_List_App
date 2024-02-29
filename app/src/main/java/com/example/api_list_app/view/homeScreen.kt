@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.GolfCourse
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -104,7 +103,7 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                     content = {
                         items(books.books) { book ->
-                            BookItemHome(navController, book, booksVM)
+                            BookItem(navController, book, booksVM)
                         }
                     }
                 )
@@ -168,54 +167,6 @@ fun SerchGenger(navController: NavController, booksVM: BocksViewModel) {
             }
         ) {
             Icon(imageVector = Icons.Filled.GolfCourse, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
-        }
-    }
-}
-
-
-
-
-
-
-@OptIn(ExperimentalGlideComposeApi::class)
-@Composable
-fun BookItemHome(navController: NavController, book: Book, booksVM: BocksViewModel) {
-    val textMarginHeight : Int = 10
-    Card(
-        border = BorderStroke(2.dp, Color.LightGray),
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier.width(100.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-                .clickable(/*enabled = false*/) {
-                    booksVM.changeIdBook(book.id)
-                    booksVM.changeGender("book/")
-                    navController.navigate(Routes.DetailScreen.route)
-                }
-        ) {
-            GlideImage(
-                model = book.image,
-                contentDescription = book.title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-            )
-            Spacer(modifier = Modifier.height(textMarginHeight.dp))
-            Text(
-                text = book.title,
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxSize()
-            )
-            Spacer(modifier = Modifier.height(textMarginHeight.dp))
-            Text(
-                text = book.authors,
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxSize()
-            )
         }
     }
 }
