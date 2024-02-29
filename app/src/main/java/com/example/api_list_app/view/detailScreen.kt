@@ -50,9 +50,10 @@ fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusS
     booksVM.getFavorites()
     println("fav")
     val b: BookDetail by booksVM.book.observeAsState(BookDetail("", "","","","", "", "", "", "", "", "", ""))
+    println("THE TITELE : "+b.title)
     println("info")
-    println(b.title)
-    MyScaffold(navController = navController, book = b, booksVM = booksVM, previusScreen = previusScreen)
+    Text(text = "im hear")
+    MyScaffold(navController = navController, book = b, booksVM = booksVM)
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -160,7 +161,8 @@ fun book (b: BookDetail) {
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel, previusScreen: String?) {
+fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel) {
+    //println("now im hear")
     Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM, b = book, )}) { paddingValues ->
         book(book)
     }
@@ -169,25 +171,31 @@ fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksVie
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail) {
-    val book = booksVM.getBookById(b.id)
+    println("top bar")
+    val book = booksVM.getBookById(b.id) //toDO: esta petando los favoritos
     booksVM.isFavorite(book)
+    println("get fav")
     val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
     val isToRead: Boolean by booksVM.isTR.observeAsState(false)
+    println("get booleans")
     val title = booksVM.bookGender
 
     TopAppBar(
-        title = { Text(text = "$title books" ) },
+        title = { Text(text = "${booksVM.title} books" ) },
         colors = TopAppBarDefaults.largeTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.background
         ),
         navigationIcon = {
+            /*
             IconButton(onClick = {
                 navController.navigate(
                     booksVM.getRout()
                 ) }) {
                 Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.background)
             }
+
+             */
         },
         actions = {
             IconButton(onClick = { if (!isToRead) booksVM.saveAsToRead(book) else booksVM.deleteToRead(book) }) {

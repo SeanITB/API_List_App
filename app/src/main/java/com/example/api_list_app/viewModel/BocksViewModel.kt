@@ -184,7 +184,7 @@ class BocksViewModel: ViewModel() {
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
                     _books.value = response.body()
-                    println("the books: "+_books.value?.books?.size)
+                    //println("the books: "+_books.value?.books?.size)
                     booksOriginal = books.value!!.copy()
                     _loadingApi.value = false
                 }
@@ -199,8 +199,10 @@ class BocksViewModel: ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = repository.getOneBook(/*gender,*/ id)
             withContext(Dispatchers.Main) {
+                println("going")
                 if (response.isSuccessful){
                     _book.value = response.body()
+                    println("titele: "+_book.value?.title)
                     _loadingApi.value = false
                 }
                 else {
