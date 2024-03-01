@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -38,6 +39,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.api_list_app.model.Book
 import com.example.api_list_app.model.BookDetail
+import com.example.api_list_app.model.ToRead
 import com.example.api_list_app.viewModel.BocksViewModel
 
 @Composable
@@ -66,6 +68,7 @@ fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusS
     MyScaffold(navController = navController, book = b, booksVM = booksVM)
 }
 
+//toDo: ¡¡¡OJO!!!  COMPOSABLE KILOMÉTRICO, misma razón que la de antes, con el constraynLoyaut no pudo desglosarlo con funciones.
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun book(b: BookDetail) {
@@ -186,15 +189,19 @@ fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksVie
     }
 }
 
+
+// toDo: partes comentadas son para toRead
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail) {
     println("ID book DETAIL: "+booksVM.idBook)
     println("size form fount DETAIL: "+booksVM.booksByGender.value?.books?.size)
-    val book: Book = booksVM.getBookById(booksVM.idBook)
-    booksVM.isFavorite(book)
+    val bookFavorite: Book = booksVM.getBookById(booksVM.idBook)
+    booksVM.isFavorite(bookFavorite)
+    //val bookToread: ToRead = booksVM.getToReadBookById(booksVM.idBook)
+    //booksVM.isToRead(bookToread)
     val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
-    val isToRead: Boolean by booksVM.isTR.observeAsState(false)
+    //val isToRead: Boolean by booksVM.isToRead.observeAsState(false)
     val favorites: List<Book> by booksVM.favorites.observeAsState(emptyList())
     TopAppBar(
         title = { Text(text = "Detail") },
@@ -217,16 +224,18 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
             }
         },
         actions = {
-            //toDo: toRead
-            /*IconButton(onClick = { if (isToRead == true){
+            /*
+            IconButton(onClick = { if (isToRead == true){
 
-                booksVM.saveAsToRead(book)
-            } else booksVM.deleteToRead(book) }) {
+                booksVM.saveAsToRead(bookFavorite)
+            } else booksVM.deleteToRead(bookFavorite) }) {
                 Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
-            }*/
+            }
+
+             */
 
             IconButton(onClick = {
-                if (!isFavorite) booksVM.saveFavorite(book) else booksVM.deleteFavorite(book)
+                if (!isFavorite) booksVM.saveFavorite(bookFavorite) else booksVM.deleteFavorite(bookFavorite)
             }
             ) {
                 Icon(
@@ -239,6 +248,8 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
     )
 }
 
+
+//toDo: quería poner enlaces para descargar los libros desde la página de la API
 @Composable
 fun HyperlinkInSentenceExample(b: BookDetail) {
     val sourceText = "Check out my website: "

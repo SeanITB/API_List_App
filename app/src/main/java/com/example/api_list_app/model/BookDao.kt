@@ -19,14 +19,14 @@ interface BookDao {
     suspend fun deleteBook(book: Book)
 
     //DML toRead table
-    @Query("SELECT * FROM Book")
-    suspend fun getAllBooksToRead(): MutableList<Book>
-    @Query("SELECT * FROM Book WHERE id =:bookId")
-    suspend fun getBookByIdToRead(bookId: String): MutableList<Book>
+    @Query("SELECT * FROM ToRead")
+    suspend fun getAllBooksToRead(): MutableList<ToRead>
+    @Query("SELECT * FROM ToRead WHERE id =:bookId")
+    suspend fun getBookByIdToRead(bookId: String): MutableList<ToRead>
     @Insert
-    suspend fun addBookToRead(book: Book)
+    suspend fun addBookToRead(book: ToRead)
     @Delete
-    suspend fun deleteBookToRead(book: Book)
+    suspend fun deleteBookToRead(book: ToRead)
 
     //DML reading table
     @Query("SELECT * FROM Book")

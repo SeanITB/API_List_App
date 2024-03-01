@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,6 +43,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.api_list_app.model.Book
 import com.example.api_list_app.model.Data
+import com.example.api_list_app.model.ToRead
 import com.example.api_list_app.navigation.BottomNavigationScreens
 import com.example.api_list_app.viewModel.BocksViewModel
 
@@ -52,7 +52,6 @@ import com.example.api_list_app.viewModel.BocksViewModel
 fun MyScaffold(navController: NavController, booksVM: BocksViewModel) {
     val books: Data by booksVM.booksByGender.observeAsState(Data(emptyList(), "", 0))
     val favorites: List<Book> by booksVM.favorites.observeAsState(mutableListOf())
-    val toRead: List<Book> by booksVM.toRead.observeAsState(mutableListOf())
     val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
     //val searchBooks: List<Book> = booksVM.getSearchBooks()
     val bottomNavigationItems = listOf(
@@ -100,8 +99,7 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel) {
                             items(
                                 when (booksVM.actualScreen) {
                                     "favoriteScreen" -> favorites
-                                    "listScreen", "search" -> books.books
-                                    else -> toRead
+                                    else -> books.books
                                 }
                             ) { book ->
                                 BookItem(navController, book, booksVM)

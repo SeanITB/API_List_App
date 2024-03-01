@@ -10,6 +10,7 @@ import com.example.api_list_app.api.Repository
 import com.example.api_list_app.model.Book
 import com.example.api_list_app.model.BookDetail
 import com.example.api_list_app.model.Data
+import com.example.api_list_app.model.ToRead
 import com.example.api_list_app.navigation.Routes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -75,10 +76,10 @@ class BocksViewModel: ViewModel() {
     //Database toRead
     private val _loadingTR = MutableLiveData(true)
     val loadingTR = _loadingTR
-    private val _isTR = MutableLiveData(false)
-    val isTR = _isTR
-    private val _tr= MutableLiveData<List<Book>>()
-    val toRead = _tr
+    private val _isToRead = MutableLiveData(false)
+    val isToRead = _isToRead
+    private val _booksToRead= MutableLiveData<List<ToRead>>()
+    val bookstoRead = _booksToRead
 
     //Database reading
     private val _loadingReading = MutableLiveData(true)
@@ -213,8 +214,6 @@ class BocksViewModel: ViewModel() {
     }
 
     fun getBookById(i: String): Book {
-        println("ID book booksVM: "+i)
-        println("result size booksVM BEFOR: "+booksByGender.value?.books?.size)
         val result = if (actualScreen == "listScreen") {
             booksByGender.value!!.books.filter { it.id == i } // filtrar per id
             //println("result size booksVM AFTER: " + result.size)
@@ -223,6 +222,20 @@ class BocksViewModel: ViewModel() {
         }
         return result[0] //because the result is a list with only a element
     }
+
+    //toDo: Aquí es donde me di cuenta de que definir cada tabla de ROOM con un tipo de dato diferente era un poco inaccesible.
+    /*
+    fun getToReadBookById(i: String): ToRead {
+        val result = if (actualScreen == "listScreen") {
+            booksByGender.value!!.books.filter { it.id == i } // filtrar per id
+            //println("result size booksVM AFTER: " + result.size)
+        } else {
+            booksByGenderRecent.value!!.books.filter { it.id == i }
+        }
+        return result[0] //because the result is a list with only a element
+    }
+
+     */
 
     fun getBooksRecent(){
         CoroutineScope(Dispatchers.IO).launch {
@@ -305,18 +318,18 @@ class BocksViewModel: ViewModel() {
             _isFavorite.postValue(false)
         }
     }
-/*
+
     fun getToRead(){
         CoroutineScope(Dispatchers.IO).launch {
             val response = repository.getToRead()
             withContext(Dispatchers.Main) {
-                _tr.value = response
+                _booksToRead.value = response
                 _loadingTR.value = false
             }
         }
     }
 
-    fun isToRead(Book: Book) {
+    fun isToRead(Book: ToRead) {
         CoroutineScope(Dispatchers.IO).launch {
             val response = repository.isToRead(Book)
             withContext(Dispatchers.Main) {
@@ -325,20 +338,20 @@ class BocksViewModel: ViewModel() {
         }
     }
 
-    fun saveAsToRead(b: Book) {
+    fun saveAsToRead(b: ToRead) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.saveAsToRead(b)
             _isFavorite.postValue(true)
         }
     }
 
-    fun deleteToRead(b: Book) {
+    fun deleteToRead(b: ToRead) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.deleteToRead(b)
             _isFavorite.postValue(false)
         }
     }
-
+/*
     fun getReading(){
         CoroutineScope(Dispatchers.IO).launch {
             val response = repository.getReading()
@@ -406,5 +419,4 @@ class BocksViewModel: ViewModel() {
     }
 
  */
-
 }
