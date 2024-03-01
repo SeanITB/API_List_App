@@ -17,7 +17,7 @@ fun LiberiScreen(navController: NavController, booksVM: BocksViewModel) {
     val showLoding: Boolean by booksVM.loadingTR.observeAsState(true)
     booksVM.changeActualScreen("liberiScreen")
     booksVM.changeTitele("LIBERI")
-    booksVM.getToRead()
+    //booksVM.getToRead()
     if (showLoding) {
         CircularProgressIndicator(
             modifier = Modifier.width(64.dp),

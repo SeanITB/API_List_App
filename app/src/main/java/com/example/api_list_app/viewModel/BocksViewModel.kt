@@ -175,6 +175,8 @@ class BocksViewModel: ViewModel() {
 
     fun getBookById(i: String): Book {
         val result = books.value!!.books.filter { it.id == i } // filtrar per id
+        //println("size of general books: "+books.value!!.books.size)
+        //println("FAVORITE: "+result.toString())
         return result[0] //because the result is a list with only a element
     }
 
@@ -195,17 +197,19 @@ class BocksViewModel: ViewModel() {
         }
     }
 
-    fun getBook(gender: String, id: String){
+    fun getBook(/*gender: String,*/ id: String){
         CoroutineScope(Dispatchers.IO).launch {
+            //println("going")
             val response = repository.getOneBook(/*gender,*/ id)
+            //println("llamada a la api")
             withContext(Dispatchers.Main) {
-                println("going")
                 if (response.isSuccessful){
                     _book.value = response.body()
-                    println("titele: "+_book.value?.title)
+                    //println("titele detail book: "+_book.value?.title)
                     _loadingApi.value = false
                 }
                 else {
+                    //println("esto peta")
                     Log.e("ERROR : ", response.message())
                 }
             }
@@ -233,8 +237,13 @@ class BocksViewModel: ViewModel() {
 
     fun saveFavorite(b: Book) {
         CoroutineScope(Dispatchers.IO).launch {
+            println("TITELE OF BOOK : "+b.title)
+            //println("publisher VM: "+b.publisher)
+            println("in proces os saving VM")
             repository.saveAsFavorite(b)
+            println("it is save VM")
             _isFavorite.postValue(true)
+            println("fav estate VM: " + isFavorite)
         }
     }
 
@@ -244,7 +253,7 @@ class BocksViewModel: ViewModel() {
             _isFavorite.postValue(false)
         }
     }
-
+/*
     fun getToRead(){
         CoroutineScope(Dispatchers.IO).launch {
             val response = repository.getToRead()
@@ -343,5 +352,7 @@ class BocksViewModel: ViewModel() {
             _isFavorite.postValue(false)
         }
     }
+
+ */
 
 }

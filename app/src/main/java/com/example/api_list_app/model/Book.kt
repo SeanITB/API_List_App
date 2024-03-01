@@ -1,5 +1,6 @@
 package com.example.api_list_app.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -11,7 +12,4 @@ data class Book(
     val image: String,
     val subtitle: String,
     val title: String,
-    val url: String,
-    val publisher: String,
-    val year: String
 )

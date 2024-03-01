@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.api_list_app.model.Book
 import com.example.api_list_app.model.BookDetail
 import com.example.api_list_app.navigation.BottomNavigationScreens
 import com.example.api_list_app.navigation.Routes
@@ -45,13 +46,14 @@ import com.example.api_list_app.viewModel.BocksViewModel
 
 @Composable
 fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusScreen: String?) {
-    println("im in")
-    booksVM.getBook(booksVM.bookGender, booksVM.idBook)
+    //println("im in")
+    booksVM.getBook(/*booksVM.bookGender,*/ booksVM.idBook)
     booksVM.getFavorites()
-    println("fav")
+    //println("fav: ")
     val b: BookDetail by booksVM.book.observeAsState(BookDetail("", "","","","", "", "", "", "", "", "", ""))
-    println("THE TITELE : "+b.title)
-    println("info")
+    //println("THE TITELE : "+b.title)
+    //println("size: ")
+    //println("info")
     Text(text = "im hear")
     MyScaffold(navController = navController, book = b, booksVM = booksVM)
 }
@@ -61,6 +63,7 @@ fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusS
 fun book (b: BookDetail) {
     val textWith: Int = 200
     val textMargin: Int = 20
+    println("THE BOOK TITELE: "+b.title)
     ConstraintLayout(
         modifier = Modifier
             .padding(16.dp)
@@ -162,6 +165,11 @@ fun book (b: BookDetail) {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel) {
+    //println("el TITELE...: ${book.title}")
+    //println("el ID: ${book.id}")
+    //println("el id pero de booksVM: "+booksVM.idBook)
+    //val b: Book = booksVM.getBookById(booksVM.idBook) //toDO: esta petando los favoritos
+    //println("Ya esta con el fav")
     //println("now im hear")
     Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM, b = book, )}) { paddingValues ->
         book(book)
@@ -171,14 +179,17 @@ fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksVie
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail) {
-    println("top bar")
-    val book = booksVM.getBookById(b.id) //toDO: esta petando los favoritos
+    //println("top bar")
+    val book: Book = booksVM.getBookById(booksVM.idBook) //toDO: esta petando los favoritos
     booksVM.isFavorite(book)
-    println("get fav")
+    //println("get fav")
     val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
     val isToRead: Boolean by booksVM.isTR.observeAsState(false)
-    println("get booleans")
-    val title = booksVM.bookGender
+    val favorites: List<Book> by booksVM.favorites.observeAsState(emptyList())
+    println("favorites that i have: "+favorites.size)
+    println("state of favorite: "+isFavorite)
+    //println("get booleans")
+    //val title = booksVM.bookGender
 
     TopAppBar(
         title = { Text(text = "${booksVM.title} books" ) },
@@ -198,11 +209,26 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
              */
         },
         actions = {
-            IconButton(onClick = { if (!isToRead) booksVM.saveAsToRead(book) else booksVM.deleteToRead(book) }) {
+
+            /*IconButton(onClick = { if (isToRead == true){
+
+                booksVM.saveAsToRead(book)
+            } else booksVM.deleteToRead(book) }) {
                 Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
-            }
-            IconButton(onClick = { if (!isFavorite) booksVM.saveFavorite(book) else booksVM.deleteFavorite(book) }) {
-                Icon(imageVector = if (!isFavorite) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite, contentDescription = "Favorite", tint = MaterialTheme.colorScheme.background)
+            }*/
+            IconButton(onClick = {
+                if (isFavorite == false){
+                    println("save as favorite DETAIL")
+                    println("publisher DETAIL: "+b.publisher)
+                    booksVM.saveFavorite(book)
+                    println("saved DETAIL")
+                    println("favorites that i have DETAIL: "+favorites.size)
+                } else {
+                    println("delete from fav")
+                    booksVM.deleteFavorite(book)
+                    println("favorites that i have: "+favorites.size)
+                } }) {
+                Icon(imageVector = if (isFavorite == true) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite, contentDescription = "Favorite", tint = MaterialTheme.colorScheme.background)
             }
         }
     )

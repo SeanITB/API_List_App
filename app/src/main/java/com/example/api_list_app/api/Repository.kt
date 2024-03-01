@@ -22,6 +22,7 @@ class Repository {
     suspend fun isFavorite(b: Book) = daoInterfase.getBookById(b.id).isNotEmpty()
     suspend fun getFavorites() = daoInterfase.getAllBooks()
 
+    /*
     //table toRead
     suspend fun saveAsToRead(book: Book) = daoInterfase.addBookToRead(book)
     suspend fun deleteToRead(b: Book) = daoInterfase.deleteBookToRead(b)
@@ -39,4 +40,6 @@ class Repository {
     suspend fun deleteRead(b: Book) = daoInterfase.deleteBookRead(b)
     suspend fun isRead(b: Book) = daoInterfase.getBookByIdRead(b.id).isNotEmpty()
     suspend fun getRead() = daoInterfase.getAllBooksRead()
+
+     */
 }

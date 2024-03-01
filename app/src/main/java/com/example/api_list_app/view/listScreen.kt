@@ -63,10 +63,11 @@ fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel) 
                 .padding(16.dp)
                 .fillMaxWidth()
                 .clickable(/*enabled = false*/) {
+                    //println("the home id book: "+ book.id)
                     booksVM.changeIdBook(book.id)
-                    booksVM.changeGender("book/")
-                    println("Goin in")
-                    println("the book titele: "+book.title)
+                    //booksVM.changeGender("book/")
+                    //println("Goin in")
+                    //println("the book titele: "+book.title)
                     navController.navigate(Routes.DetailScreen.route)
                 }
         ) {
