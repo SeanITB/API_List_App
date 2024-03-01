@@ -212,7 +212,7 @@ fun MyBottomBar(navController: NavController, bottomNavItems: List<BottomNavigat
 fun MySearchBar(navController: NavController, booksVM: BocksViewModel) {
     val serchText by when (booksVM.actualScreen) {
         "favoriteScreen" -> booksVM.searchTextFav.observeAsState("")
-        //"homeSreen" -> booksVM.
+        "homeScreen" -> booksVM.searchTextHome.observeAsState("")
         else -> booksVM.searchText.observeAsState("")
     }
     SearchBar(

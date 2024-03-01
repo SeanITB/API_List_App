@@ -20,8 +20,6 @@ class BocksViewModel: ViewModel() {
     private var repository = Repository()
 
     //Api data
-
-
     private val _loadingApi = MutableLiveData(true)
     val loadingApi = _loadingApi
 
@@ -137,33 +135,31 @@ class BocksViewModel: ViewModel() {
     fun searchDependingOnTheScreen(searchText: String) {
         when (this.actualScreen) {
             "favoriteScreen" -> onSearchTextChangeFavorites(searchText)
-            "homeSreen" -> onSearchTextChangeHome(searchText)
+            "homeScreen" -> onSearchTextChangeHome(searchText)
             else -> onSearchTextChangeList(searchText)
         }
     }
 
-    /*
-    fun searchTextDependingOnScreen(): String! {
-        return when (this.actualScreen) {
-            "favoriteScreen" -> onSearchTextChangeFavorites(searchText)
-            "homeSreen" -> onSearchTextChangeHome(searchText)
-            else -> booksVM.searchText.observeAsState("")
-        }
+    fun onSearchTextChangeHome(value: String) {
+        this.searchBooksRecent = booksOriginalReccent.books
+        println("fount of RECENT: "+searchBooksRecent)
+        this._searchTextHome.value = value
+        this.searchBooksRecent = this.searchBooksRecent?.filter { it.title.contains(value, true)  }!!
+        this._booksByGenderRecent.value = Data(searchBooksRecent, booksByGenderRecent.value!!.status, booksByGenderRecent.value!!.total)
     }
 
-     */
     fun onSearchTextChangeList(value: String) {
-        searchBooks = booksOriginal.books
+        this.searchBooks = booksOriginal.books
         this._searchText.value = value
         this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
-        _booksByGender.value = Data(searchBooks, booksByGender.value!!.status, booksByGender.value!!.total)
+        this._booksByGender.value = Data(searchBooks, booksByGender.value!!.status, booksByGender.value!!.total)
     }
 
     fun onSearchTextChangeFavorites(value: String) {
-        searchFav = booksOriginalFav
+        this.searchFav = booksOriginalFav
         this._searchTextFav.value = value
         this.searchFav = this.searchFav?.filter { it.title.contains(value, true)  }!!
-        _favorites.value = searchFav
+        this._favorites.value = searchFav
     }
 
     /*
@@ -179,13 +175,6 @@ class BocksViewModel: ViewModel() {
     }
 
      */
-
-    fun onSearchTextChangeHome(value: String) {
-        searchBooks = booksOriginal.books
-        this._searchText.value = value
-        this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
-        _booksByGender.value = Data(searchBooks, booksByGender.value!!.status, booksByGender.value!!.total)
-    }
 
     fun changeIsSearching(value: Boolean) {
         this._isSearching.value = value
