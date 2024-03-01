@@ -158,7 +158,7 @@ class BocksViewModel: ViewModel() {
     }
 
     fun changeTitele(value: String) {
-        this.actualScreen = value
+        this.title = value
     }
 
     fun getRout(): String {
@@ -237,13 +237,13 @@ class BocksViewModel: ViewModel() {
 
     fun saveFavorite(b: Book) {
         CoroutineScope(Dispatchers.IO).launch {
-            println("TITELE OF BOOK : "+b.title)
+            //println("TITELE OF BOOK : "+b.title)
             //println("publisher VM: "+b.publisher)
-            println("in proces os saving VM")
+            //println("in proces os saving VM")
             repository.saveAsFavorite(b)
-            println("it is save VM")
+            //println("it is save VM")
             _isFavorite.postValue(true)
-            println("fav estate VM: " + isFavorite)
+            //println("fav estate VM: " + isFavorite)
         }
     }
 

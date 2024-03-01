@@ -187,7 +187,7 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
     val isToRead: Boolean by booksVM.isTR.observeAsState(false)
     val favorites: List<Book> by booksVM.favorites.observeAsState(emptyList())
     println("favorites that i have: "+favorites.size)
-    println("state of favorite: "+isFavorite)
+    println("state of favorite IN DETAIL: "+isFavorite)
     //println("get booleans")
     //val title = booksVM.bookGender
 
@@ -218,17 +218,19 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
             }*/
             IconButton(onClick = {
                 if (isFavorite == false){
-                    println("save as favorite DETAIL")
-                    println("publisher DETAIL: "+b.publisher)
+                    //println("save as favorite DETAIL")
+                    //println("publisher DETAIL: "+b.publisher)
                     booksVM.saveFavorite(book)
-                    println("saved DETAIL")
-                    println("favorites that i have DETAIL: "+favorites.size)
+                    //println("saved DETAIL")
+                    //println("fav state DETAIL: "+isFavorite)
+                    //println("favorites that i have DETAIL: "+favorites.size)
                 } else {
-                    println("delete from fav")
-                    booksVM.deleteFavorite(book)
-                    println("favorites that i have: "+favorites.size)
+                    //println("delete from fav")
+                    println("delete fav DITAIL")
+                    booksVM.deleteFavorite(book) //toDo: creo q aqui no esta elminando los fav
+                    //println("favorites that i have: "+favorites.size)
                 } }) {
-                Icon(imageVector = if (isFavorite == true) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite, contentDescription = "Favorite", tint = MaterialTheme.colorScheme.background)
+                Icon(imageVector = if (isFavorite == false) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite, contentDescription = "Favorite", tint = MaterialTheme.colorScheme.background)
             }
         }
     )
