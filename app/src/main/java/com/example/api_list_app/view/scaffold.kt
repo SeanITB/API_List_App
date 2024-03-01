@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -77,19 +78,6 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel) {
             )
         }
     ) { paddingValues ->
-        /*
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            items(
-                when (booksVM.actualScreen) {
-                    "favoriteScreen" -> favorites
-                    "listScreen", "search" -> books.books
-                    else -> toRead
-                }
-            ) { book ->
-                BookItem(navController, book, booksVM)
-            }
-        }
-        */
         ConstraintLayout {
             val (booksCL) = createRefs()
             //Spacer(modifier = Modifier.height(300.dp))
@@ -131,6 +119,7 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel) {
 @Composable
 fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel) {
     val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
+    println("Actual screeen RECEANT: "+ booksVM.actualScreen)
     TopAppBar(
         title = { Text(text = booksVM.title) },
         colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -141,6 +130,19 @@ fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel) {
         //.fillMaxHeight(0.1f),
         //.padding(1.dp),
         //.weight(1f),
+        navigationIcon = {
+            IconButton(onClick = {
+                navController.navigate(
+                    booksVM.getRout()
+                )
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.background
+                )
+            }
+        },
         actions = {
             IconButton(onClick = {
                 booksVM.changeIsSearching(true)

@@ -80,6 +80,10 @@ class BocksViewModel: ViewModel() {
     var actualScreen by mutableStateOf("homeScreen")
         private set
 
+    var previusScreen by mutableStateOf("homeScreen")
+        private set
+
+
     var title by mutableStateOf("home")
         private set
 
@@ -173,6 +177,10 @@ class BocksViewModel: ViewModel() {
 
     fun changeActualScreen(value: String) {
         this.actualScreen = value
+    }
+
+    fun changePreviusScreen(value: String) {
+        this.previusScreen = value
     }
 
     fun changeTitele(value: String) {

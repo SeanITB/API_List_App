@@ -46,10 +46,8 @@ import com.example.api_list_app.viewModel.BocksViewModel
 
 @Composable
 fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusScreen: String?) {
-    //println("im in")
     booksVM.getBook(/*booksVM.bookGender,*/ booksVM.idBook)
     booksVM.getFavorites()
-    //println("fav: ")
     val b: BookDetail by booksVM.book.observeAsState(
         BookDetail(
             "",
@@ -66,9 +64,6 @@ fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusS
             ""
         )
     )
-    //println("THE TITELE : "+b.title)
-    //println("size: ")
-    //println("info")
     Text(text = "im hear")
     MyScaffold(navController = navController, book = b, booksVM = booksVM)
 }
@@ -200,7 +195,7 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
     val favorites: List<Book> by booksVM.favorites.observeAsState(emptyList())
     println("actual screen: " + booksVM.actualScreen)
     TopAppBar(
-        title = { Text(text = "${booksVM.title} books") },
+        title = { Text(text = "Detail") },
         colors = TopAppBarDefaults.largeTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.background
