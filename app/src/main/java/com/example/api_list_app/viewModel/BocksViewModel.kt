@@ -80,7 +80,7 @@ class BocksViewModel: ViewModel() {
     var actualScreen by mutableStateOf("homeScreen")
         private set
 
-    var title by mutableStateOf("homeScreen")
+    var title by mutableStateOf("home")
         private set
 
     var expanded by mutableStateOf(false)

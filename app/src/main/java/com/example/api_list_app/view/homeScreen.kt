@@ -81,9 +81,14 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
         BottomNavigationScreens.Settings
     )
     val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
+    val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
     //val body = bodyHomeScreen(navController = navController, booksVM = booksVM, actualScreen = actualScreen)
     Scaffold (
-        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM)},
+        topBar = {
+            MyTopAppBarList(navController = navController, booksVM = booksVM)
+            if (isSearch)
+                MySearchBar(navController, booksVM)
+                 },
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
         Column(
