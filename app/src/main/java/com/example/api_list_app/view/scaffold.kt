@@ -72,10 +72,12 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel) {
             if (isSearch) MySearchBar(navController, booksVM)
         },
         bottomBar = {
-            MyBottomBar(
-                navController = navController,
-                bottomNavItems = bottomNavigationItems
-            )
+            if (booksVM.actualScreen != "listScreen") {
+                MyBottomBar(
+                    navController = navController,
+                    bottomNavItems = bottomNavigationItems
+                )
+            }
         }
     ) { paddingValues ->
         ConstraintLayout {
@@ -85,7 +87,7 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel) {
                 modifier = Modifier
                     //.fillMaxWidth(0.8f)
                     //.fillMaxHeight(0.8f)
-                    .height(625.dp)
+                    .height(if (booksVM.actualScreen != "listScreen") 625.dp else 700.dp)
                     .width(400.dp)
                     .constrainAs(booksCL) {
                         top.linkTo(parent.top, margin = 75.dp)
