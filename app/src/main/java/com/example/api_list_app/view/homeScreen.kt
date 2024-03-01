@@ -116,7 +116,7 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
                     .fillMaxWidth(0.9f)
                     .constrainAs(searchGenderCL) {
                         top.linkTo(parent.top, margin = 75.dp)
-                        bottom.linkTo(booksCL.top)
+                        bottom.linkTo(booksCL.top, margin = 20.dp)
                     }
             ) {
                 Spacer(modifier = Modifier.padding(16.dp))
@@ -180,7 +180,7 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
                 .width(400.dp)
                 .constrainAs(booksCL) {
                     top.linkTo(searchGenderCL.top, margin = 50.dp)
-                    bottom.linkTo(booksH.bottom)
+                    bottom.linkTo(parent.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }

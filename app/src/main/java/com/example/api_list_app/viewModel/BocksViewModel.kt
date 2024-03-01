@@ -120,6 +120,9 @@ class BocksViewModel: ViewModel() {
     var idBook by mutableStateOf("3319546813")
         private set
 
+    var displayMenu by mutableStateOf(false)
+        private set
+
     fun changeGender(value: String) {
         this.bookGender = when(value) {
             "Computer Science" -> "computer+science"
@@ -189,6 +192,9 @@ class BocksViewModel: ViewModel() {
         this.expanded = value
     }
 
+    fun changeDispalyMenu(value: Boolean) {
+        this.displayMenu = value
+    }
     fun changeActualScreen(value: String) {
         this.actualScreen = value
     }

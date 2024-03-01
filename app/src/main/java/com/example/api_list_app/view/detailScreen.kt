@@ -71,7 +71,7 @@ fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusS
 //toDo: ¡¡¡OJO!!!  COMPOSABLE KILOMÉTRICO, misma razón que la de antes, con el constraynLoyaut no pudo desglosarlo con funciones.
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun book(b: BookDetail) {
+fun book(b: BookDetail, booksVM: BocksViewModel) {
     val textWith: Int = 200
     val textMargin: Int = 20
     println("THE BOOK TITELE: " + b.title)
@@ -139,8 +139,8 @@ fun book(b: BookDetail) {
         Text(
             text = """
                 Publisher: ${b.publisher}
-                Subject: toDo
-                Language: Englesh
+                Subject: ${booksVM.bookGender}
+                Language: English
                 Pages: ${b.pages}
                 Year: ${b.year}
             """.trimIndent(),
@@ -185,7 +185,7 @@ fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksVie
 
 
     }) { paddingValues ->
-        book(book)
+        book(book, booksVM)
     }
 }
 
@@ -194,8 +194,6 @@ fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksVie
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail) {
-    println("ID book DETAIL: "+booksVM.idBook)
-    println("size form fount DETAIL: "+booksVM.booksByGender.value?.books?.size)
     val bookFavorite: Book = booksVM.getBookById(booksVM.idBook)
     booksVM.isFavorite(bookFavorite)
     //val bookToread: ToRead = booksVM.getToReadBookById(booksVM.idBook)

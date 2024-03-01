@@ -1,6 +1,7 @@
 package com.example.api_list_app.view
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,11 +17,14 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,9 +38,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
@@ -125,7 +131,7 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel) {
-    println("SCREAN TO GO BACK myTopBar: " + booksVM.previusScreen)
+    val context = LocalContext.current
     TopAppBar(
         title = { Text(text = booksVM.title) },
         colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -163,12 +169,32 @@ fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel) {
                     tint = MaterialTheme.colorScheme.background
                 )
             }
-            IconButton(onClick = { /*toDo*/ }) {
+            IconButton(onClick = { booksVM.changeDispalyMenu(!booksVM.displayMenu)}) {
                 Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = "Settings",
+                    imageVector = Icons.Filled.MoreVert,
+                    contentDescription = "More icon",
                     tint = MaterialTheme.colorScheme.background
                 )
+            }
+            DropdownMenu(expanded = booksVM.displayMenu, onDismissRequest = { booksVM.changeDispalyMenu(false) }) {
+                DropdownMenuItem(onClick = {
+                    Toast.makeText(context, "Aquí navegaría a una supuesta página de settings.", Toast.LENGTH_LONG).show()
+                    booksVM.changeDispalyMenu(false)
+                }) {
+                    Text(text = "Settigs")
+                }
+                DropdownMenuItem(onClick = {
+                    Toast.makeText(context, "Aquí pondría el drop down menu, que ahora está puesto feo el home.", Toast.LENGTH_LONG).show()
+                    booksVM.changeDispalyMenu(false)
+                }) {
+                    Text(text = "Search by book gender")
+                }
+                DropdownMenuItem(onClick = {
+                    Toast.makeText(context, "Aquí pondría una ayuda para utilizar la app.", Toast.LENGTH_LONG).show()
+                    booksVM.changeDispalyMenu(false)
+                }) {
+                    Text(text = "Help")
+                }
             }
         }
     )
