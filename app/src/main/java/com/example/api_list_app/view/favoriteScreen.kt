@@ -34,7 +34,6 @@ import com.example.api_list_app.viewModel.BocksViewModel
 fun FavoriteScreen(navController: NavController, booksVM: BocksViewModel) {
     booksVM.getFavorites()
     val showLoding: Boolean by booksVM.loadingDB.observeAsState(true)
-    //val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
     booksVM.changeActualScreen("favoriteScreen")
     booksVM.changeTitele("Favorite")
     println("titele of fav: "+booksVM.title)

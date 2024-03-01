@@ -89,10 +89,6 @@ class BocksViewModel: ViewModel() {
     var bookGender by mutableStateOf("recent")
         private set
 
-    //var query by mutableStateOf("search/${this.bookGender}/")
-    //  private set
-
-    //var query = "search/history"
 
     var idBook by mutableStateOf("3319546813")
         private set
@@ -129,27 +125,17 @@ class BocksViewModel: ViewModel() {
 
      */
     fun onSearchTextChangeList(value: String) {
-        println("actual screen: "+this.actualScreen)
-        println("search in LIST")
         searchBooks = booksOriginal.books
-        //println("text: "+value)
         this._searchText.value = value
         this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
-        //println("Lista: "+searchBooks?.size)
         _books.value = Data(searchBooks, books.value!!.status, books.value!!.total)
-        //this._isSearching.value = true
     }
 
     fun onSearchTextChangeFavorites(value: String) {
-        println("search in FAV")
         searchFav = booksOriginalFav
-        println("text FAV: "+value)
         this._searchTextFav.value = value
-        println("Lista befor FAV: "+searchBooks?.size)
         this.searchFav = this.searchFav?.filter { it.title.contains(value, true)  }!!
-        println("Lista despres FAV: "+searchBooks?.size)
         _favorites.value = searchFav
-        //this._isSearching.value = true
     }
 
     /*
@@ -167,14 +153,10 @@ class BocksViewModel: ViewModel() {
      */
 
     fun onSearchTextChangeHome(value: String) {
-        println("search in HOME")
         searchBooks = booksOriginal.books
-        //println("text: "+value)
         this._searchText.value = value
         this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
-        //println("Lista: "+searchBooks?.size)
         _books.value = Data(searchBooks, books.value!!.status, books.value!!.total)
-        //this._isSearching.value = true
     }
 
     fun changeIsSearching(value: Boolean) {
@@ -198,24 +180,15 @@ class BocksViewModel: ViewModel() {
     }
 
     fun getRout(): String {
-        return  when(this.actualScreen) {
+        return  when(actualScreen) {
             "listScreen", "search"  -> Routes.ListScreen.route
-            "homeScreen" -> Routes.HomeScreen.route
-            else -> Routes.FavoriteScreen.route
+            "favoriteScreen" -> Routes.FavoriteScreen.route
+            else -> Routes.HomeScreen.route
         }
     }
 
-    /*
-    fun getSearchBooks(): List<Book> {
-        return this.searchBooks
-    }
-
-     */
-
     fun getBookById(i: String): Book {
         val result = books.value!!.books.filter { it.id == i } // filtrar per id
-        //println("size of general books: "+books.value!!.books.size)
-        //println("FAVORITE: "+result.toString())
         return result[0] //because the result is a list with only a element
     }
 
@@ -225,7 +198,6 @@ class BocksViewModel: ViewModel() {
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
                     _books.value = response.body()
-                    //println("the books: "+_books.value?.books?.size)
                     booksOriginal = books.value!!.copy()
                     _loadingApi.value = false
                 }
@@ -236,19 +208,15 @@ class BocksViewModel: ViewModel() {
         }
     }
 
-    fun getBook(/*gender: String,*/ id: String){
+    fun getBook(id: String){
         CoroutineScope(Dispatchers.IO).launch {
-            //println("going")
             val response = repository.getOneBook(/*gender,*/ id)
-            //println("llamada a la api")
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
                     _book.value = response.body()
-                    //println("titele detail book: "+_book.value?.title)
                     _loadingApi.value = false
                 }
                 else {
-                    //println("esto peta")
                     Log.e("ERROR : ", response.message())
                 }
             }
@@ -277,13 +245,8 @@ class BocksViewModel: ViewModel() {
 
     fun saveFavorite(b: Book) {
         CoroutineScope(Dispatchers.IO).launch {
-            //println("TITELE OF BOOK : "+b.title)
-            //println("publisher VM: "+b.publisher)
-            //println("in proces os saving VM")
             repository.saveAsFavorite(b)
-            //println("it is save VM")
             _isFavorite.postValue(true)
-            //println("fav estate VM: " + isFavorite)
         }
     }
 

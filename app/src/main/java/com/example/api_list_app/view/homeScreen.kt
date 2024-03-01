@@ -43,6 +43,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstrainedLayoutReference
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -58,8 +60,6 @@ fun HomeScreen(navController: NavController, booksVM: BocksViewModel) {
     booksVM.changeActualScreen("homeScreen")
     booksVM.changeTitele("Home")
     val showLoding: Boolean by booksVM.loadingApi.observeAsState(true)
-    //val title = "Home"
-
     if (showLoding) {
         CircularProgressIndicator(
             modifier = Modifier.width(64.dp),
@@ -82,27 +82,96 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
     )
     val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
     val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
-    //val body = bodyHomeScreen(navController = navController, booksVM = booksVM, actualScreen = actualScreen)
     Scaffold (
         topBar = {
             MyTopAppBarList(navController = navController, booksVM = booksVM)
-            if (isSearch)
-                MySearchBar(navController, booksVM)
+            if (isSearch) MySearchBar(navController, booksVM)
                  },
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Spacer(modifier = Modifier.height(90.dp))
-            Text(text = "Welcom to the best Libery App", fontWeight = FontWeight.Bold/*, fontSize = 40.dp*/)
-            Spacer(modifier = Modifier.height(20.dp))
-            SerchGenger(navController, booksVM)
-            Spacer(modifier = Modifier.height(20.dp))
+        ConstraintLayout{
+            val (searchGenderCL, booksCL) = createRefs()
+            //Text(text = "Welcom to the best Libery App", fontWeight = FontWeight.Bold/*, fontSize = 40.dp*/)
+            //Spacer(modifier = Modifier.height(20.dp))
+            //Spacer(modifier = Modifier.height(20.dp))
+            //Spacer(modifier = Modifier.height(200.dp))
+            //SerchGenger(navController, booksVM)
+            val genders = arrayOf("Computer Science", "Science Mathematics", "Economics Finance", "Business Management", "Politics Government", "History", "Philosophy", "Kotlin", "Android")
+            booksVM.changeActualScreen("homeSreen")
+            Row (
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .constrainAs(searchGenderCL) {
+                        top.linkTo(parent.top, margin = 75.dp)
+                        bottom.linkTo(booksCL.top)
+                    }
+            ) {
+                Spacer(modifier = Modifier.padding(16.dp))
+                //Text(text = "Book\nGender", fontWeight = FontWeight.Bold)
+                //Spacer(modifier = Modifier.padding(16.dp))
+                Box(
+                    //contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxWidth(0.75f)
+                ) {
+                    OutlinedTextField(
+                        value = booksVM.bookGender,
+                        onValueChange = { booksVM.changeGender(booksVM.bookGender) },
+                        label = { Text(text = "GENDER BOOK", color = MaterialTheme.colorScheme.primary) },
+                        enabled = false,
+                        readOnly = true,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            cursorColor = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier
+                            .clickable { booksVM.changeExpanded(true) }
+                            .fillMaxWidth(0.6f)
+                    )
+                    DropdownMenu(
+                        expanded = booksVM.expanded,
+                        onDismissRequest = { booksVM.changeExpanded(false) },
+                        modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
+                    ) {
+                        genders.forEach { gender ->
+                            DropdownMenuItem(
+                                text = { androidx.compose.material3.Text(text = gender, color = MaterialTheme.colorScheme.background) },
+                                onClick = {
+                                    booksVM.changeExpanded(false)
+                                    booksVM.changeGender(gender)
+                                }
+                            )
+                        }
+                    }
+                }
+                Button(
+                    onClick = {
+                        navController.navigate(Routes.ListScreen.route)
+                    },
+                    shape = RoundedCornerShape(5.dp),
+                    modifier = Modifier
+                        .height(65.dp)
+                        .width(65.dp)
+                        .padding(8.dp),
+                ) {
+                    Text(text = "GO")
+                    //Icon(imageVector = Icons.Filled.GolfCourse, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
+                }
+            }
             Box(modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .fillMaxHeight(0.8f)) {
+                //.fillMaxWidth(0.8f)
+                //.fillMaxHeight(0.8f)
+                .height(525.dp)
+                .width(400.dp)
+                .constrainAs(booksCL) {
+                    top.linkTo(searchGenderCL.top, margin = 50.dp)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+            ) {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -118,7 +187,7 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
     }
 }
 
-
+/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SerchGenger(navController: NavController, booksVM: BocksViewModel) {
@@ -126,11 +195,12 @@ fun SerchGenger(navController: NavController, booksVM: BocksViewModel) {
     booksVM.changeActualScreen("homeSreen")
     Row (
         horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth(0.9f)
+        modifier = Modifier
+            .fillMaxWidth(0.9f)
     ) {
         Spacer(modifier = Modifier.padding(16.dp))
-        Text(text = "Book\nGender", fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.padding(16.dp))
+        //Text(text = "Book\nGender", fontWeight = FontWeight.Bold)
+        //Spacer(modifier = Modifier.padding(16.dp))
         Box(
             //contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxWidth(0.75f)
@@ -170,9 +240,16 @@ fun SerchGenger(navController: NavController, booksVM: BocksViewModel) {
         Button(
             onClick = {
                 navController.navigate(Routes.ListScreen.route)
-            }
+            },
+            shape = RoundedCornerShape(5.dp),
+            modifier = Modifier
+                .height(65.dp)
+                .width(65.dp)
+                .padding(8.dp),
         ) {
-            Icon(imageVector = Icons.Filled.GolfCourse, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
+            Text(text = "GO")
+            //Icon(imageVector = Icons.Filled.GolfCourse, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
         }
     }
-}
+}*/
+

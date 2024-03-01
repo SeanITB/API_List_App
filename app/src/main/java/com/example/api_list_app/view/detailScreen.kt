@@ -50,7 +50,22 @@ fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusS
     booksVM.getBook(/*booksVM.bookGender,*/ booksVM.idBook)
     booksVM.getFavorites()
     //println("fav: ")
-    val b: BookDetail by booksVM.book.observeAsState(BookDetail("", "","","","", "", "", "", "", "", "", ""))
+    val b: BookDetail by booksVM.book.observeAsState(
+        BookDetail(
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        )
+    )
     //println("THE TITELE : "+b.title)
     //println("size: ")
     //println("info")
@@ -60,10 +75,10 @@ fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusS
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun book (b: BookDetail) {
+fun book(b: BookDetail) {
     val textWith: Int = 200
     val textMargin: Int = 20
-    println("THE BOOK TITELE: "+b.title)
+    println("THE BOOK TITELE: " + b.title)
     ConstraintLayout(
         modifier = Modifier
             .padding(16.dp)
@@ -161,17 +176,16 @@ fun book (b: BookDetail) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel) {
-    //println("el TITELE...: ${book.title}")
-    //println("el ID: ${book.id}")
-    //println("el id pero de booksVM: "+booksVM.idBook)
-    //val b: Book = booksVM.getBookById(booksVM.idBook) //toDO: esta petando los favoritos
-    //println("Ya esta con el fav")
-    //println("now im hear")
-    Scaffold (topBar = {MyTopAppBarDetail(navController = navController, booksVM = booksVM, b = book, )}) { paddingValues ->
+    Scaffold(topBar = {
+        MyTopAppBarDetail(
+            navController = navController,
+            booksVM = booksVM,
+            b = book,
+        )
+    }) { paddingValues ->
         book(book)
     }
 }
@@ -179,37 +193,33 @@ fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksVie
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail) {
-    //println("top bar")
     val book: Book = booksVM.getBookById(booksVM.idBook)
     booksVM.isFavorite(book)
-    //println("get fav")
     val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
     val isToRead: Boolean by booksVM.isTR.observeAsState(false)
     val favorites: List<Book> by booksVM.favorites.observeAsState(emptyList())
-    //println("favorites that i have: "+favorites.size)
-    //println("state of favorite IN DETAIL: "+isFavorite)
-    //println("get booleans")
-    //val title = booksVM.bookGender
-
+    println("actual screen: " + booksVM.actualScreen)
     TopAppBar(
-        title = { Text(text = "${booksVM.title} books" ) },
+        title = { Text(text = "${booksVM.title} books") },
         colors = TopAppBarDefaults.largeTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.background
         ),
         navigationIcon = {
-            /*
             IconButton(onClick = {
                 navController.navigate(
                     booksVM.getRout()
-                ) }) {
-                Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.background)
+                )
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.background
+                )
             }
-
-             */
         },
         actions = {
-
+            //toDo: toRead
             /*IconButton(onClick = { if (isToRead == true){
 
                 booksVM.saveAsToRead(book)
@@ -217,20 +227,14 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
                 Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
             }*/
             IconButton(onClick = {
-                if (isFavorite == false){
-                    //println("save as favorite DETAIL")
-                    //println("publisher DETAIL: "+b.publisher)
-                    booksVM.saveFavorite(book)
-                    //println("saved DETAIL")
-                    //println("fav state DETAIL: "+isFavorite)
-                    //println("favorites that i have DETAIL: "+favorites.size)
-                } else {
-                    //println("delete from fav")
-                    //println("delete fav DITAIL")
-                    booksVM.deleteFavorite(book)
-                    //println("favorites that i have: "+favorites.size)
-                } }) {
-                Icon(imageVector = if (isFavorite == false) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite, contentDescription = "Favorite", tint = MaterialTheme.colorScheme.background)
+                if (!isFavorite) booksVM.saveFavorite(book) else booksVM.deleteFavorite(book)
+            }
+            ) {
+                Icon(
+                    imageVector = if (!isFavorite) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite,
+                    contentDescription = "Favorite",
+                    tint = MaterialTheme.colorScheme.background
+                )
             }
         }
     )
@@ -244,7 +248,12 @@ fun HyperlinkInSentenceExample(b: BookDetail) {
     val uri = b.url
     val annotatedString = buildAnnotatedString {
         append(sourceText)
-        withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline, color = Color.Blue)) {
+        withStyle(
+            style = SpanStyle(
+                textDecoration = TextDecoration.Underline,
+                color = Color.Blue
+            )
+        ) {
             append(hyperlinkText)
             addStringAnnotation(
                 tag = "URL",
