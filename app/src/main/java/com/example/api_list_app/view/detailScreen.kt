@@ -46,8 +46,10 @@ import com.example.api_list_app.viewModel.BocksViewModel
 
 @Composable
 fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusScreen: String?) {
-    booksVM.getBook(/*booksVM.bookGender,*/ booksVM.idBook)
+    booksVM.getBook(booksVM.idBook)
     booksVM.getFavorites()
+    println("actualScrean DITAIL: "+booksVM.actualScreen)
+    println("previus screan DITAIL: "+booksVM.previusScreen)
     val b: BookDetail by booksVM.book.observeAsState(
         BookDetail(
             "",
@@ -193,7 +195,6 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
     val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
     val isToRead: Boolean by booksVM.isTR.observeAsState(false)
     val favorites: List<Book> by booksVM.favorites.observeAsState(emptyList())
-    println("actual screen: " + booksVM.actualScreen)
     TopAppBar(
         title = { Text(text = "Detail") },
         colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -205,6 +206,7 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
                 navController.navigate(
                     booksVM.getRout()
                 )
+                booksVM.changePreviusScreen(booksVM.initialScreen)
             }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,

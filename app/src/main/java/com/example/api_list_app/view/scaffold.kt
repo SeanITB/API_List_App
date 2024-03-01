@@ -118,8 +118,7 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel) {
-    val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
-    println("Actual screeen RECEANT: "+ booksVM.actualScreen)
+    println("SCREAN TO GO BACK myTopBar: "+booksVM.previusScreen)
     TopAppBar(
         title = { Text(text = booksVM.title) },
         colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -131,16 +130,19 @@ fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel) {
         //.padding(1.dp),
         //.weight(1f),
         navigationIcon = {
-            IconButton(onClick = {
-                navController.navigate(
-                    booksVM.getRout()
-                )
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.background
-                )
+            if (booksVM.actualScreen.equals("listScreen")) {
+                //booksVM.changePreviusScreen(booksVM.actualScreen)
+                IconButton(onClick = {
+                    navController.navigate(
+                        booksVM.getRout()
+                    )
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.background
+                    )
+                }
             }
         },
         actions = {

@@ -36,7 +36,7 @@ fun MyRecyclerBooksView(navController: NavController, booksVM: BocksViewModel, l
     booksVM.getBooks(booksVM.bookGender)
     val showLoding: Boolean by booksVM.loadingApi.observeAsState(true)
     val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
-    booksVM.changeActualScreen(if (isSearch) "search" else "listScreen")
+    booksVM.changeActualScreen("listScreen")
     if (showLoding) {
         CircularProgressIndicator(
             modifier = Modifier.width(64.dp),
@@ -62,12 +62,10 @@ fun BookItem(navController: NavController, book: Book, booksVM: BocksViewModel) 
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
-                .clickable(/*enabled = false*/) {
-                    //println("the home id book: "+ book.id)
+                .clickable {
+                    booksVM.changeInitialScreen(booksVM.previusScreen)
+                    booksVM.changePreviusScreen(booksVM.actualScreen)
                     booksVM.changeIdBook(book.id)
-                    //booksVM.changeGender("book/")
-                    //println("Goin in")
-                    //println("the book titele: "+book.title)
                     navController.navigate(Routes.DetailScreen.route)
                 }
         ) {

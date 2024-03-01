@@ -83,6 +83,9 @@ class BocksViewModel: ViewModel() {
     var previusScreen by mutableStateOf("homeScreen")
         private set
 
+    var initialScreen by mutableStateOf("homeScreen")
+        private set
+
 
     var title by mutableStateOf("home")
         private set
@@ -183,12 +186,16 @@ class BocksViewModel: ViewModel() {
         this.previusScreen = value
     }
 
+    fun changeInitialScreen(value: String) {
+        this.initialScreen = value
+    }
+
     fun changeTitele(value: String) {
         this.title = value
     }
 
     fun getRout(): String {
-        return  when(actualScreen) {
+        return  when(previusScreen) {
             "listScreen", "search"  -> Routes.ListScreen.route
             "favoriteScreen" -> Routes.FavoriteScreen.route
             else -> Routes.HomeScreen.route

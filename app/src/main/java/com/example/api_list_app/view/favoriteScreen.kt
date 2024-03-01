@@ -36,7 +36,6 @@ fun FavoriteScreen(navController: NavController, booksVM: BocksViewModel) {
     val showLoding: Boolean by booksVM.loadingDB.observeAsState(true)
     booksVM.changeActualScreen("favoriteScreen")
     booksVM.changeTitele("Favorite")
-    println("titele of fav: "+booksVM.title)
     if (showLoding) {
         CircularProgressIndicator(
             modifier = Modifier.width(64.dp),

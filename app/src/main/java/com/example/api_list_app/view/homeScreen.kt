@@ -97,7 +97,6 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
             //Spacer(modifier = Modifier.height(200.dp))
             //SerchGenger(navController, booksVM)
             val genders = arrayOf("Computer Science", "Science Mathematics", "Economics Finance", "Business Management", "Politics Government", "History", "Philosophy", "Kotlin", "Android")
-            booksVM.changeActualScreen("homeSreen")
             Row (
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
@@ -148,6 +147,7 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
                 }
                 Button(
                     onClick = {
+                        booksVM.changePreviusScreen(booksVM.actualScreen)
                         navController.navigate(Routes.ListScreen.route)
                     },
                     shape = RoundedCornerShape(5.dp),
