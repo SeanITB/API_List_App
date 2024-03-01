@@ -2,6 +2,7 @@ package com.example.api_list_app.viewModel
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
@@ -24,11 +25,12 @@ class BocksViewModel: ViewModel() {
     val loadingApi = _loadingApi
     private val _books = MutableLiveData<Data>()
     val books = _books
-    var booksOriginal = Data(emptyList(), "", 0)
     private val _book = MutableLiveData<BookDetail>()
     val book = _book
 
+
     // Search text
+    var booksOriginal = Data(emptyList(), "", 0)
     private var searchBooks : List<Book> = emptyList()
     private val _searchText = MutableLiveData("")
     val searchText = _searchText
@@ -42,6 +44,14 @@ class BocksViewModel: ViewModel() {
     val isFavorite = _isFavorite
     private val _favorites = MutableLiveData<List<Book>>()
     val favorites = _favorites
+    //Search for fav
+    var booksOriginalFav : List<Book> = emptyList()
+    private var searchFav : List<Book> = emptyList()
+    private val _searchTextFav = MutableLiveData("")
+    val searchTextFav = _searchTextFav
+    private val _isSearchingFav = MutableLiveData(false)
+    val isSearchingFav = _isSearchingFav
+
 
     //Database toRead
     private val _loadingTR = MutableLiveData(true)
@@ -100,43 +110,69 @@ class BocksViewModel: ViewModel() {
             else -> "android"
         }
     }
+    fun searchDependingOnTheScreen(searchText: String) {
+        when (this.actualScreen) {
+            "favoriteScreen" -> onSearchTextChangeFavorites(searchText)
+            "homeSreen" -> onSearchTextChangeHome(searchText)
+            else -> onSearchTextChangeList(searchText)
+        }
+    }
 
+    /*
+    fun searchTextDependingOnScreen(): String! {
+        return when (this.actualScreen) {
+            "favoriteScreen" -> onSearchTextChangeFavorites(searchText)
+            "homeSreen" -> onSearchTextChangeHome(searchText)
+            else -> booksVM.searchText.observeAsState("")
+        }
+    }
+
+     */
     fun onSearchTextChangeList(value: String) {
+        println("actual screen: "+this.actualScreen)
+        println("search in LIST")
         searchBooks = booksOriginal.books
-        println("text: "+value)
+        //println("text: "+value)
         this._searchText.value = value
         this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
-        println("Lista: "+searchBooks?.size)
+        //println("Lista: "+searchBooks?.size)
         _books.value = Data(searchBooks, books.value!!.status, books.value!!.total)
         //this._isSearching.value = true
     }
 
     fun onSearchTextChangeFavorites(value: String) {
+        println("search in FAV")
+        searchFav = booksOriginalFav
+        println("text FAV: "+value)
+        this._searchTextFav.value = value
+        println("Lista befor FAV: "+searchBooks?.size)
+        this.searchFav = this.searchFav?.filter { it.title.contains(value, true)  }!!
+        println("Lista despres FAV: "+searchBooks?.size)
+        _favorites.value = searchFav
+        //this._isSearching.value = true
+    }
+
+    /*
+    fun onSearchTextChangeLiberi(value: String) {
+        println("search in HOME")
         searchBooks = booksOriginal.books
-        println("text: "+value)
+        //println("text: "+value)
         this._searchText.value = value
         this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
-        println("Lista: "+searchBooks?.size)
+        //println("Lista: "+searchBooks?.size)
         _books.value = Data(searchBooks, books.value!!.status, books.value!!.total)
         //this._isSearching.value = true
     }
 
-    fun onSearchTextChangeLiberi(value: String) {
-        searchBooks = booksOriginal.books
-        println("text: "+value)
-        this._searchText.value = value
-        this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
-        println("Lista: "+searchBooks?.size)
-        _books.value = Data(searchBooks, books.value!!.status, books.value!!.total)
-        //this._isSearching.value = true
-    }
+     */
 
     fun onSearchTextChangeHome(value: String) {
+        println("search in HOME")
         searchBooks = booksOriginal.books
-        println("text: "+value)
+        //println("text: "+value)
         this._searchText.value = value
         this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
-        println("Lista: "+searchBooks?.size)
+        //println("Lista: "+searchBooks?.size)
         _books.value = Data(searchBooks, books.value!!.status, books.value!!.total)
         //this._isSearching.value = true
     }
@@ -169,9 +205,12 @@ class BocksViewModel: ViewModel() {
         }
     }
 
+    /*
     fun getSearchBooks(): List<Book> {
         return this.searchBooks
     }
+
+     */
 
     fun getBookById(i: String): Book {
         val result = books.value!!.books.filter { it.id == i } // filtrar per id
@@ -221,6 +260,7 @@ class BocksViewModel: ViewModel() {
             val response = repository.getFavorites()
             withContext(Dispatchers.Main) {
                 _favorites.value = response
+                booksOriginalFav = favorites.value!!.toList()
                 _loadingDB.value = false
             }
         }

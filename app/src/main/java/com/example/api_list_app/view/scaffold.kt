@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -50,9 +51,18 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel) {
         BottomNavigationScreens.Settings
     )
 
-    Scaffold (
-        topBar = {MyTopAppBarList(navController = navController, booksVM = booksVM)},
-        bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
+    Scaffold(
+        topBar = {
+            MyTopAppBarList(navController = navController, booksVM = booksVM)
+           // if (isSearch)
+             //   MySearchBar(navController, booksVM)
+        },
+        bottomBar = {
+            MyBottomBar(
+                navController = navController,
+                bottomNavItems = bottomNavigationItems
+            )
+        }
     ) { paddingValues ->
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             /*
@@ -90,7 +100,7 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel) {
 
 
             items(
-                when(booksVM.actualScreen) {
+                when (booksVM.actualScreen) {
                     "favoriteScreen" -> favorites
                     "listScreen", "search" -> books.books
                     else -> toRead
@@ -110,7 +120,7 @@ fun MyScaffold(navController: NavController, booksVM: BocksViewModel) {
 fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel) {
     val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
     TopAppBar(
-        title = { Text(text = booksVM.title ) },
+        title = { Text(text = booksVM.title) },
         colors = TopAppBarDefaults.largeTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.background
@@ -120,55 +130,94 @@ fun MyTopAppBarList(navController: NavController, booksVM: BocksViewModel) {
                 booksVM.changeIsSearching(true)
                 //navController.navigate(Routes.ListScreen.route)
             }) {
-                Icon(imageVector = Icons.Filled.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "Search",
+                    tint = MaterialTheme.colorScheme.background
+                )
             }
             IconButton(onClick = { /*toDo*/ }) {
-                Icon(imageVector = Icons.Filled.Settings, contentDescription = "Settings", tint = MaterialTheme.colorScheme.background)
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = "Settings",
+                    tint = MaterialTheme.colorScheme.background
+                )
             }
         }
     )
-    if (isSearch) MySearchBar(navController, booksVM)
-}
 
-@Composable
-fun MyBottomBar(navController: NavController, bottomNavItems:  List<BottomNavigationScreens>) {
-    BottomNavigation(backgroundColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.background) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-        bottomNavItems.forEach { item ->
-            BottomNavigationItem(
-                icon = { Icon(item.icon, contentDescription = item.label, tint = MaterialTheme.colorScheme.background) },
-                label = { Text(text = item.label) },
-                selected = currentRoute == item.route,
-                selectedContentColor = Color.White,
-                unselectedContentColor = Color.Black,
-                alwaysShowLabel = false,
-                onClick = {
-                    if (currentRoute != item.route)
-                        navController.navigate(item.route)
-                }
-            )
+
+    @Composable
+    fun MyBottomBar(navController: NavController, bottomNavItems: List<BottomNavigationScreens>) {
+        BottomNavigation(
+            backgroundColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.background
+        ) {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+            bottomNavItems.forEach { item ->
+                BottomNavigationItem(
+                    icon = {
+                        Icon(
+                            item.icon,
+                            contentDescription = item.label,
+                            tint = MaterialTheme.colorScheme.background
+                        )
+                    },
+                    label = { Text(text = item.label) },
+                    selected = currentRoute == item.route,
+                    selectedContentColor = Color.White,
+                    unselectedContentColor = Color.Black,
+                    alwaysShowLabel = false,
+                    onClick = {
+                        if (currentRoute != item.route)
+                            navController.navigate(item.route)
+                    }
+                )
+            }
         }
     }
-}
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MySearchBar(navController: NavController, booksVM: BocksViewModel) {
-    val serchText by booksVM.searchText.observeAsState("")
-    SearchBar(
-        query = serchText,
-        onQueryChange = { booksVM.onSearchTextChangeList(it) },
-        onSearch = { booksVM.onSearchTextChangeList(it) },
-        active = true,
-        leadingIcon = { Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")},
-        trailingIcon = { Icon(imageVector = Icons.Filled.Close, contentDescription = "Close search", modifier = Modifier.clickable { booksVM.changeIsSearching(false) })},
-        placeholder = { Text("What are you looking for?")},
-        onActiveChange = {},
-        modifier = Modifier
-            .fillMaxHeight(0.1f)
-            .clip(CircleShape),
-    ){}
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun MySearchBar(navController: NavController, booksVM: BocksViewModel) {
+        val serchText by when (booksVM.actualScreen) {
+            "favoriteScreen" -> booksVM.searchTextFav.observeAsState("")
+            //"homeSreen" -> booksVM.
+            else -> booksVM.searchText.observeAsState("")
+        }
+        //booksVM.searchTextDependingOnScreen()
+        SearchBar(
+            query = serchText,
+            onQueryChange = {
+                println("ACTUAL SCREEN IN SCAFOLD: " + booksVM.actualScreen)
+                booksVM.searchDependingOnTheScreen(it)
+                //booksVM.onSearchTextChangeList(it)
+            },
+            onSearch = { booksVM.searchDependingOnTheScreen(it) },
+            active = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "Search"
+                )
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = "Close search",
+                    modifier = Modifier.clickable { booksVM.changeIsSearching(false) })
+            },
+            placeholder = { Text("What are you looking for?") },
+            onActiveChange = {},
+            modifier = Modifier
+                .fillMaxHeight(0.1f)
+                .fillMaxWidth()
+            //.clip(CircleShape),
+        ) {}
+    }
+    if (isSearch)
+        MySearchBar(navController, booksVM)
 }
 
 

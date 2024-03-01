@@ -56,8 +56,9 @@ import com.example.api_list_app.viewModel.BocksViewModel
 fun HomeScreen(navController: NavController, booksVM: BocksViewModel) {
     booksVM.getBooks(booksVM.bookGender)
     booksVM.changeActualScreen("homeScreen")
+    booksVM.changeTitele("Home")
     val showLoding: Boolean by booksVM.loadingApi.observeAsState(true)
-    val title = "Home"
+    //val title = "Home"
 
     if (showLoding) {
         CircularProgressIndicator(

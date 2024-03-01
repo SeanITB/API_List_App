@@ -180,14 +180,14 @@ fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksVie
 @Composable
 fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail) {
     //println("top bar")
-    val book: Book = booksVM.getBookById(booksVM.idBook) //toDO: esta petando los favoritos
+    val book: Book = booksVM.getBookById(booksVM.idBook)
     booksVM.isFavorite(book)
     //println("get fav")
     val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
     val isToRead: Boolean by booksVM.isTR.observeAsState(false)
     val favorites: List<Book> by booksVM.favorites.observeAsState(emptyList())
-    println("favorites that i have: "+favorites.size)
-    println("state of favorite IN DETAIL: "+isFavorite)
+    //println("favorites that i have: "+favorites.size)
+    //println("state of favorite IN DETAIL: "+isFavorite)
     //println("get booleans")
     //val title = booksVM.bookGender
 
@@ -226,8 +226,8 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
                     //println("favorites that i have DETAIL: "+favorites.size)
                 } else {
                     //println("delete from fav")
-                    println("delete fav DITAIL")
-                    booksVM.deleteFavorite(book) //toDo: creo q aqui no esta elminando los fav
+                    //println("delete fav DITAIL")
+                    booksVM.deleteFavorite(book)
                     //println("favorites that i have: "+favorites.size)
                 } }) {
                 Icon(imageVector = if (isFavorite == false) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite, contentDescription = "Favorite", tint = MaterialTheme.colorScheme.background)
