@@ -224,7 +224,14 @@ class BocksViewModel: ViewModel() {
     }
 
     fun getBookById(i: String): Book {
-        val result = booksByGender.value!!.books.filter { it.id == i } // filtrar per id
+        println("ID book booksVM: "+i)
+        println("result size booksVM BEFOR: "+booksByGender.value?.books?.size)
+        val result = if (actualScreen == "listScreen") {
+            booksByGender.value!!.books.filter { it.id == i } // filtrar per id
+            //println("result size booksVM AFTER: " + result.size)
+        } else {
+            booksByGenderRecent.value!!.books.filter { it.id == i }
+        }
         return result[0] //because the result is a list with only a element
     }
 

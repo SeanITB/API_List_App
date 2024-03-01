@@ -44,12 +44,37 @@ fun HomeScreen(navController: NavController, booksVM: BocksViewModel) {
     booksVM.getBooksRecent()
     booksVM.changeActualScreen("homeScreen")
     booksVM.changeTitele("Home")
+    println("size form fount HOME: "+ booksVM.booksByGenderRecent.value?.books?.size)
     val showLoding: Boolean by booksVM.loadingApi.observeAsState(true)
     if (showLoding) {
-        CircularProgressIndicator(
-            modifier = Modifier.width(64.dp),
-            color = MaterialTheme.colorScheme.primary
-        )
+        ConstraintLayout {
+            val (circularProgresBar, text) = createRefs()
+            Box(
+                modifier = Modifier
+                    //.width(400.dp)
+                    //.height(400.dp)
+                    .constrainAs(circularProgresBar) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(text.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.width(64.dp),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            androidx.compose.material3.Text(
+                "Waiting for a response...",
+                modifier = Modifier.constrainAs(text) {
+                    top.linkTo(circularProgresBar.bottom)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+            )
+        }
     }
     else {
         MyScaffoldHome(navController, booksVM)
@@ -69,7 +94,6 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
         BottomNavigationScreens.Settings
     )
     val booksRecent: Data by booksVM.booksByGenderRecent.observeAsState(Data(emptyList(), "", 0))
-    //val books: Data by booksVM.booksByGender.observeAsState(Data(emptyList(), "", 0))
     val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
     Scaffold (
         topBar = {

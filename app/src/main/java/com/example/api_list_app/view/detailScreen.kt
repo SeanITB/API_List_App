@@ -173,11 +173,14 @@ fun book(b: BookDetail) {
 @Composable
 fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksViewModel) {
     Scaffold(topBar = {
+
         MyTopAppBarDetail(
             navController = navController,
             booksVM = booksVM,
             b = book,
         )
+
+
     }) { paddingValues ->
         book(book)
     }
@@ -186,6 +189,8 @@ fun MyScaffold(navController: NavController, book: BookDetail, booksVM: BocksVie
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: BookDetail) {
+    println("ID book DETAIL: "+booksVM.idBook)
+    println("size form fount DETAIL: "+booksVM.booksByGender.value?.books?.size)
     val book: Book = booksVM.getBookById(booksVM.idBook)
     booksVM.isFavorite(book)
     val isFavorite: Boolean by booksVM.isFavorite.observeAsState(false)
@@ -219,6 +224,7 @@ fun MyTopAppBarDetail(navController: NavController, booksVM: BocksViewModel, b: 
             } else booksVM.deleteToRead(book) }) {
                 Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Search", tint = MaterialTheme.colorScheme.background)
             }*/
+
             IconButton(onClick = {
                 if (!isFavorite) booksVM.saveFavorite(book) else booksVM.deleteFavorite(book)
             }
