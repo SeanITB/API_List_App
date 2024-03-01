@@ -11,6 +11,9 @@ import retrofit2.http.Path
 
 
 interface APIInterface {
+
+    @GET("search/recent")
+    suspend fun getRecentBook(): Response<Data>
     @GET("search/{gender}")
     suspend fun getGenderBook(@Path("gender") charQuery: String): Response<Data>
 

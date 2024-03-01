@@ -4,11 +4,9 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -40,8 +38,6 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.api_list_app.model.Book
 import com.example.api_list_app.model.BookDetail
-import com.example.api_list_app.navigation.BottomNavigationScreens
-import com.example.api_list_app.navigation.Routes
 import com.example.api_list_app.viewModel.BocksViewModel
 
 @Composable
@@ -50,7 +46,7 @@ fun DetailScreen(navController: NavController, booksVM: BocksViewModel, previusS
     booksVM.getFavorites()
     println("actualScrean DITAIL: "+booksVM.actualScreen)
     println("previus screan DITAIL: "+booksVM.previusScreen)
-    val b: BookDetail by booksVM.book.observeAsState(
+    val b: BookDetail by booksVM.bookForDetail.observeAsState(
         BookDetail(
             "",
             "",

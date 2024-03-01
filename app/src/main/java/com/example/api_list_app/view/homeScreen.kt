@@ -1,16 +1,12 @@
 package com.example.api_list_app.view
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,15 +16,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.GolfCourse
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -36,27 +28,20 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
-import com.example.api_list_app.model.Book
 import com.example.api_list_app.model.Data
 import com.example.api_list_app.navigation.BottomNavigationScreens
 import com.example.api_list_app.navigation.Routes
 import com.example.api_list_app.viewModel.BocksViewModel
 
+
 @Composable
 fun HomeScreen(navController: NavController, booksVM: BocksViewModel) {
-    booksVM.getBooks(booksVM.bookGender)
+    //booksVM.getBooksByGender(booksVM.bookGender)
+    booksVM.getBooksRecent()
     booksVM.changeActualScreen("homeScreen")
     booksVM.changeTitele("Home")
     val showLoding: Boolean by booksVM.loadingApi.observeAsState(true)
@@ -71,6 +56,9 @@ fun HomeScreen(navController: NavController, booksVM: BocksViewModel) {
     }
 }
 
+//toDo: ¡¡¡ATENCIÓN!!!, composable kilométrico,
+//Esto es porque si lo desgloso en funciones después no puedo utilizar el constreynLoyaut
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -80,7 +68,8 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
         BottomNavigationScreens.Home,
         BottomNavigationScreens.Settings
     )
-    val books: Data by booksVM.books.observeAsState(Data(emptyList(), "", 0))
+    val booksRecent: Data by booksVM.booksByGenderRecent.observeAsState(Data(emptyList(), "", 0))
+    //val books: Data by booksVM.booksByGender.observeAsState(Data(emptyList(), "", 0))
     val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
     Scaffold (
         topBar = {
@@ -90,7 +79,7 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
         bottomBar = { MyBottomBar(navController = navController, bottomNavItems = bottomNavigationItems)}
     ) { paddingValues ->
         ConstraintLayout{
-            val (searchGenderCL, booksCL) = createRefs()
+            val (searchGenderCL, booksCL, booksH) = createRefs()
             //Text(text = "Welcom to the best Libery App", fontWeight = FontWeight.Bold/*, fontSize = 40.dp*/)
             //Spacer(modifier = Modifier.height(20.dp))
             //Spacer(modifier = Modifier.height(20.dp))
@@ -167,6 +156,30 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
                 .width(400.dp)
                 .constrainAs(booksCL) {
                     top.linkTo(searchGenderCL.top, margin = 50.dp)
+                    bottom.linkTo(booksH.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+            ) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    content = {
+                        items(booksRecent.books) { book ->
+                            BookItem(navController, book, booksVM)
+                        }
+                    }
+                )
+            }
+            /* toDo: whant to do a drabagle list
+            Box(modifier = Modifier
+                //.fillMaxWidth(0.8f)
+                //.fillMaxHeight(0.8f)
+                .height(525.dp)
+                .width(400.dp)
+                .constrainAs(booksH) {
+                    top.linkTo(booksCL.top, margin = 50.dp)
                     bottom.linkTo(parent.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
@@ -177,16 +190,19 @@ fun MyScaffoldHome(navController: NavController, booksVM: BocksViewModel) {
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                     content = {
-                        items(books.books) { book ->
+                        items(booksRecent.books) { book ->
                             BookItem(navController, book, booksVM)
                         }
                     }
                 )
             }
+
+             */
         }
     }
 }
 
+// toDo: ¡¡¡ATETNCION!!!, aqui estari el apartado de searchGender si no tuviera el error del constraynLoyaut
 /*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

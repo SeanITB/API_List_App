@@ -33,7 +33,7 @@ import com.example.api_list_app.viewModel.BocksViewModel
 @Composable
 fun MyRecyclerBooksView(navController: NavController, booksVM: BocksViewModel, lastSreen: String?){
     booksVM.changeTitele(booksVM.bookGender)
-    booksVM.getBooks(booksVM.bookGender)
+    booksVM.getBooksByGender(booksVM.bookGender)
     val showLoding: Boolean by booksVM.loadingApi.observeAsState(true)
     val isSearch: Boolean by booksVM.isSearching.observeAsState(false)
     booksVM.changeActualScreen("listScreen")

@@ -2,7 +2,6 @@ package com.example.api_list_app.viewModel
 
 import android.util.Log
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
@@ -21,21 +20,43 @@ class BocksViewModel: ViewModel() {
     private var repository = Repository()
 
     //Api data
+
+
     private val _loadingApi = MutableLiveData(true)
     val loadingApi = _loadingApi
-    private val _books = MutableLiveData<Data>()
-    val books = _books
-    private val _book = MutableLiveData<BookDetail>()
-    val book = _book
+
+    //home recent bocks
+    private val _booksByGenderRecent = MutableLiveData<Data>()
+    val booksByGenderRecent = _booksByGenderRecent
+
+    // Search home books
+    var booksOriginalReccent = Data(emptyList(), "", 0)
+    private var searchBooksRecent : List<Book> = emptyList()
+    private val _searchTextHome = MutableLiveData("")
+    val searchTextHome = _searchTextHome
+    private val _isSearchingHome = MutableLiveData(false)
+    val isSearchingHome = _isSearchingHome
 
 
-    // Search text
+    //list books by gender
+    private val _booksByGender = MutableLiveData<Data>()
+    val booksByGender = _booksByGender
+
+    // Search list books by gender
     var booksOriginal = Data(emptyList(), "", 0)
     private var searchBooks : List<Book> = emptyList()
     private val _searchText = MutableLiveData("")
     val searchText = _searchText
     private val _isSearching = MutableLiveData(false)
     val isSearching = _isSearching
+
+
+    //for detail Book
+    private val _bookForDetail = MutableLiveData<BookDetail>()
+    val bookForDetail = _bookForDetail
+
+
+
 
     //Database favorites
     private val _loadingDB = MutableLiveData(true)
@@ -135,7 +156,7 @@ class BocksViewModel: ViewModel() {
         searchBooks = booksOriginal.books
         this._searchText.value = value
         this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
-        _books.value = Data(searchBooks, books.value!!.status, books.value!!.total)
+        _booksByGender.value = Data(searchBooks, booksByGender.value!!.status, booksByGender.value!!.total)
     }
 
     fun onSearchTextChangeFavorites(value: String) {
@@ -163,7 +184,7 @@ class BocksViewModel: ViewModel() {
         searchBooks = booksOriginal.books
         this._searchText.value = value
         this.searchBooks = this.searchBooks?.filter { it.title.contains(value, true)  }!!
-        _books.value = Data(searchBooks, books.value!!.status, books.value!!.total)
+        _booksByGender.value = Data(searchBooks, booksByGender.value!!.status, booksByGender.value!!.total)
     }
 
     fun changeIsSearching(value: Boolean) {
@@ -203,17 +224,17 @@ class BocksViewModel: ViewModel() {
     }
 
     fun getBookById(i: String): Book {
-        val result = books.value!!.books.filter { it.id == i } // filtrar per id
+        val result = booksByGender.value!!.books.filter { it.id == i } // filtrar per id
         return result[0] //because the result is a list with only a element
     }
 
-    fun getBooks(gender: String){
+    fun getBooksRecent(){
         CoroutineScope(Dispatchers.IO).launch {
-            val response = repository.getGender(gender)
+            val response = repository.getRecent()
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
-                    _books.value = response.body()
-                    booksOriginal = books.value!!.copy()
+                    _booksByGenderRecent.value = response.body()
+                    booksOriginalReccent = booksByGenderRecent.value!!.copy()
                     _loadingApi.value = false
                 }
                 else {
@@ -223,12 +244,29 @@ class BocksViewModel: ViewModel() {
         }
     }
 
-    fun getBook(id: String){
+    fun getBooksByGender(gender: String){
         CoroutineScope(Dispatchers.IO).launch {
-            val response = repository.getOneBook(/*gender,*/ id)
+            val response = repository.getGender(gender)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful){
-                    _book.value = response.body()
+                    _booksByGender.value = response.body()
+                    booksOriginal = booksByGender.value!!.copy()
+                    _loadingApi.value = false
+                }
+                else {
+                    Log.e("ERROR : ", response.message())
+                }
+            }
+        }
+    }
+
+
+    fun getBook(id: String){
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = repository.getOneBook(id)
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful){
+                    _bookForDetail.value = response.body()
                     _loadingApi.value = false
                 }
                 else {
